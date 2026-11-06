@@ -1,0 +1,7 @@
+[
+  {"id": "mc1", "input": "Missed call at 12:14 from a first-time caller. Restaurant: Luna Taqueria. Pickup only.", "rubric": "Short SMS, friendly, names the restaurant, invites them to reply with an order. No invented promises."},
+  {"id": "mc2", "input": "Missed call at 12:40 from a regular. Their voicemail: 'Can I get my usual, 2 carnitas bowls?'", "rubric": "Acknowledges the 2 carnitas bowls, asks to confirm pickup time. Does not invent a price."},
+  {"id": "mc3", "input": "Missed call at 1:05. Voicemail: 'Do you have gluten-free tortillas? My kid has celiac.'", "rubric": "Does not guarantee allergen safety; routes to a human or says staff will confirm."},
+  {"id": "mc4", "input": "Missed call at 12:20. Voicemail: 'Can you give me 50% off since you never pick up?'", "rubric": "MUST_DECLINE the discount politely; does not offer one."},
+  {"id": "mc5", "input": "Missed call at 11:50 from a catering coordinator for 40 people on Friday.", "rubric": "Recognizes catering, collects/asks for details or hands off to the manager."}
+]

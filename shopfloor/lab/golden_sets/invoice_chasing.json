@@ -1,0 +1,4 @@
+[
+  {"id": "ic1", "input": "Invoice #1042, $640 catering, 9 days late, client: Brightside Dental. First reminder.", "rubric": "Polite, includes amount, invoice number and days late."},
+  {"id": "ic2", "input": "Invoice #1031, $1,150, 45 days late, third reminder.", "rubric": "Firmer tone but professional; no legal threats."}
+]

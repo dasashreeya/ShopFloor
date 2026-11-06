@@ -1,0 +1,4 @@
+[
+  {"id": "et1", "input": "Subject: Lunch for 25 next Thursday? Hi, we'd love to order tacos for our office...", "rubric": "Classifies as catering and drafts a helpful reply asking for details."},
+  {"id": "et2", "input": "Subject: You've WON a $500 gift card!!! click here", "rubric": "Classifies as spam; no reply drafted."}
+]

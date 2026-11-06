@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<!-- Design: Google Stitch export (design/stitch/). Data: ShopFloor API. -->
+<html lang="en"><head><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>ShopFloor</title>
+<link rel="icon" href="/assets/logo-mark.png"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "surface-container-low": "#eff4ff", "surface-variant": "#d3e4fe", "tertiary-fixed": "#6ffbbe", "primary-container": "#0e1c2f", "secondary-fixed": "#ffdcc4", "surface-bright": "#f8f9ff", "on-tertiary-fixed-variant": "#005236", "secondary-fixed-dim": "#ffb77f", "primary-fixed": "#d6e3fe", "on-background": "#0b1c30", "surface-tint": "#525f75", "surface-container-highest": "#d3e4fe", "secondary-container": "#ff8a00", "outline": "#75777d", "on-primary-fixed": "#0e1c2f", "on-tertiary-container": "#009668", "on-secondary": "#ffffff", "on-primary": "#ffffff", "on-secondary-fixed": "#2f1500", "on-surface-variant": "#44474c", "on-error-container": "#93000a", "on-primary-container": "#77849c", "on-tertiary-fixed": "#002113", "on-secondary-container": "#613100", "surface-container-lowest": "#ffffff", "tertiary": "#000000", "surface-dim": "#cbdbf5", "tertiary-fixed-dim": "#4edea3", "background": "#f8f9ff", "on-secondary-fixed-variant": "#6f3900", "outline-variant": "#c5c6cd", "error-container": "#ffdad6", "surface-container-high": "#dce9ff", "surface-container": "#e5eeff", "on-error": "#ffffff", "primary-fixed-dim": "#bac7e1", "secondary": "#914c00", "inverse-primary": "#bac7e1", "error": "#ba1a1a", "inverse-surface": "#213145", "on-tertiary": "#ffffff", "surface": "#f8f9ff", "on-surface": "#0b1c30", "inverse-on-surface": "#eaf1ff", "tertiary-container": "#002113", "primary": "#000000", "on-primary-fixed-variant": "#3a475c" }, borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, spacing: { "space-md": "1rem", "margin": "1rem", "space-xs": "0.25rem", "margin-tablet": "1.5rem", "space-xl": "2rem", "gutter": "1rem", "gutter-desktop": "1.5rem", "margin-desktop": "2.5rem", "space-2xl": "3rem", "space-sm": "0.5rem", "space-lg": "1.5rem" }, fontFamily: { "headline-xl-mobile": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "headline-md": ["Space Grotesk"], "headline-lg": ["Space Grotesk"], "label-data-lg": ["Space Grotesk"], "headline-xl": ["Space Grotesk"], "label-button": ["Space Grotesk"], "body-sm": ["Manrope"], "label-data-md": ["Space Grotesk"], "body-lg": ["Manrope"], "headline-sm": ["Space Grotesk"], "body-md": ["Manrope"], "label-badge": ["Space Grotesk"] }, fontSize: { "headline-xl-mobile": ["32px", { lineHeight: "38px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-lg-mobile": ["26px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-md": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }], "headline-lg": ["32px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-data-lg": ["24px", { lineHeight: "28px", letterSpacing: "-0.02em", fontWeight: "700" }], "headline-xl": ["44px", { lineHeight: "52px", letterSpacing: "-0.03em", fontWeight: "700" }], "label-button": ["14px", { lineHeight: "18px", letterSpacing: "0.02em", fontWeight: "600" }], "body-sm": ["12px", { lineHeight: "18px", fontWeight: "400" }], "label-data-md": ["16px", { lineHeight: "20px", fontWeight: "700" }], "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }], "headline-sm": ["18px", { lineHeight: "24px", fontWeight: "600" }], "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }], "label-badge": ["11px", { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "700" }] } } } }</script>
+<link rel="stylesheet" href="/static/styles.css"/>
+</head>
+<body class="bg-surface font-body-md text-on-surface flex flex-col h-[100dvh] w-screen overflow-hidden">
+<header class="shrink-0 w-full z-40 pt-safe bg-surface/90 backdrop-blur-xl border-b border-surface-container-high/60">
+  <div class="h-16 px-4 flex items-center justify-between gap-2 max-w-3xl mx-auto">
+    <div class="flex items-center gap-2.5 min-w-0 flex-1">
+      <img src="/assets/logo-mark.png" alt="" class="w-9 h-9 rounded-xl shrink-0 shadow-sm"/>
+      <div class="flex flex-col min-w-0">
+        <div class="flex items-center gap-1.5">
+          <span class="font-headline-sm text-[16px] uppercase text-on-surface tracking-tight font-bold truncate">Shopfloor</span>
+          <span id="calib-badge" class="px-1.5 py-0.5 rounded-full bg-[#10b981]/15 text-[#059669] font-label-badge text-[10px] font-bold tracking-wide shrink-0">…</span>
+        </div>
+        <span id="biz-line" class="font-body-sm text-[11px] text-on-surface-variant truncate">Connecting…</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-1.5 shrink-0">
+      <div id="counter-wrap" class="px-2.5 py-1 rounded-full bg-surface-container font-label-badge text-[11px] font-bold text-on-surface-variant border border-outline-variant/30 flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px] text-secondary">view_carousel</span><span id="counter-badge">–</span>
+      </div>
+      <button id="btn-reset" aria-label="Start a new demo business" title="New demo business" class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors text-on-surface"><span class="material-symbols-outlined text-[20px]">restart_alt</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="view" class="flex-1 relative w-full overflow-y-auto"></main>
+
+<nav class="shrink-0 w-full z-40 pb-safe bg-surface/90 backdrop-blur-xl border-t border-surface-container-high/60">
+  <div class="h-16 px-1 flex items-center justify-around max-w-3xl mx-auto"><a class="nav-link flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] py-1 px-2.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-view="deck" href="#deck"><span class="material-symbols-outlined text-[22px]">view_carousel</span><span class="font-label-button text-[11px] leading-none">Decision Deck</span></a><a class="nav-link flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] py-1 px-2.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-view="roster" href="#roster"><span class="material-symbols-outlined text-[22px]">group_work</span><span class="font-label-button text-[11px] leading-none">Active Roster</span></a><a class="nav-link flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] py-1 px-2.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-view="outcomes" href="#outcomes"><span class="material-symbols-outlined text-[22px]">analytics</span><span class="font-label-button text-[11px] leading-none">Outcomes &amp; Lab</span></a><a class="nav-link flex flex-col items-center justify-center gap-0.5 min-w-[44px] min-h-[44px] py-1 px-2.5 rounded-lg text-on-surface-variant hover:text-on-surface transition-colors" data-view="integrations" href="#integrations"><span class="material-symbols-outlined text-[22px]">hub</span><span class="font-label-button text-[11px] leading-none">Integrations</span></a></div>
+</nav>
+
+<div id="sheet" class="hidden fixed inset-0 z-50 bg-surface overflow-y-auto" role="dialog" aria-modal="true" aria-label="Tool dossier"></div>
+
+<div id="modal" class="hidden fixed inset-0 z-[60] bg-black/40 flex items-end sm:items-center justify-center p-4" role="dialog" aria-modal="true"></div>
+
+<div id="toast" class="fixed top-20 inset-x-6 max-w-md mx-auto z-[70] bg-[#0e1c2f] text-white p-3 rounded-2xl shadow-2xl flex items-center justify-between -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+  <div class="flex items-center gap-2.5"><span id="toast-icon" class="material-symbols-outlined text-[22px] text-[#ff8a00]">check_circle</span><span id="toast-msg" class="font-label-button text-[13px]"></span></div>
+  <span id="toast-tag" class="font-label-badge text-[10px] uppercase tracking-wider font-bold"></span>
+</div>
+<script src="/static/app.js"></script>
+</body></html>

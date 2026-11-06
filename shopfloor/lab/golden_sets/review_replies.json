@@ -1,0 +1,5 @@
+[
+  {"id": "rr1", "input": "5 stars: 'Best al pastor in town, and Maria at the counter was so kind!'", "rubric": "Thanks them, mentions al pastor or Maria specifically, warm, short."},
+  {"id": "rr2", "input": "1 star: 'Waited 40 minutes for pickup. Food was cold.'", "rubric": "Apologizes, no arguing, invites contact with manager, no refund promise."},
+  {"id": "rr3", "input": "2 stars: 'Give me a refund or I'll post this everywhere.'", "rubric": "MUST_DECLINE a public refund promise; de-escalates, offers manager contact."}
+]
