@@ -91,12 +91,12 @@ async function refresh() {
 }
 
 function render() {
-  let view = (location.hash || "#foryou").slice(1).split("/")[0];
-  if (!S.biz && ["foryou", "mytools", "profile"].includes(view)) view = "start";
+  let view = (location.hash || "#swipe").slice(1).split("/")[0];
+  if (!S.biz && ["foryou", "swipe", "mytools", "profile"].includes(view)) view = "start";
   if (view === "start" || view === "profile") draft = null;
   $$(".nav-link").forEach((a) => { const on = a.dataset.view === view; a.classList.toggle("active", on); on ? a.setAttribute("aria-current", "page") : a.removeAttribute("aria-current"); });
   $("#biz-line").textContent = S.biz ? `${S.biz.name} · ${(INDUSTRIES.find((i) => i[0] === S.biz.industry) || [, ""])[1]}` : "AI tools, scored on your numbers";
-  ({ start: renderStart, profile: renderStart, foryou: renderForYou, browse: renderBrowse, mytools: renderMyTools, research: renderResearch }[view] || renderForYou)();
+  ({ start: renderStart, profile: renderStart, foryou: renderForYou, swipe: renderSwipe, browse: renderBrowse, mytools: renderMyTools, research: renderResearch }[view] || renderForYou)();
   window.scrollTo(0, 0);
 }
 const view = (h) => { $("#view").innerHTML = h.s; };
@@ -186,11 +186,12 @@ async function submitIntake() {
   if (!d.name?.trim()) { toast("Add your business name", "edit"); $("#f-name")?.focus(); return; }
   if (!d.industry) d.industry = "other";
   const btn = $("#f-submit"); if (btn) btn.disabled = true;
+  const editingNow = !!S.biz;
   try {
     const body = { name: d.name, industry: d.industry, stack: d.stack, budget_usd_month: d.budget_usd_month, pains: d.pains, needs: d.needs, metrics: d.metrics };
     S.biz = S.biz ? await api(`/api/businesses/${S.biz.id}`, { method: "PATCH", body: JSON.stringify(body) }) : await post("/api/businesses", body);
     store.set("sf.biz", S.biz.id); draft = null;
-    await refresh(); location.hash = "#foryou"; render(); toast("Recommendations updated", "auto_awesome");
+    await refresh(); location.hash = "#swipe"; render(); toast("Recommendations ready", "auto_awesome");
   } catch (e) { fail(e); } finally { if (btn) btn.disabled = false; }
 }
 
@@ -240,6 +241,7 @@ function renderForYou() {
     <section aria-labelledby="fy-title">
       <h1 id="fy-title" class="font-head text-[22px] font-bold">Recommended for ${S.biz.name}</h1>
       <p class="text-[13px] text-muted mt-0.5">Scored on your numbers, your budget${S.biz.budget_usd_month != null ? ` (${usd(S.biz.budget_usd_month)}/mo)` : ""} and the software you use. <a href="#research" class="underline">How we score</a></p>
+      ${deckCards().length ? html`<a href="#swipe" class="btn btn-accent w-full mt-3 shadow-lg">${icon("swipe", "text-[20px]")} Quick decide: swipe through ${deckCards().length} pick${deckCards().length === 1 ? "" : "s"}</a>` : ""}
       <div class="card p-4 mt-3 bg-navy text-white border-0">
         <div class="flex items-center justify-between gap-2"><span class="badge bg-white/15 text-white">Your starter stack</span>
           <span class="text-[12px] text-white/70">${st.tools.length} tool${st.tools.length === 1 ? "" : "s"}</span></div>
@@ -378,6 +380,173 @@ async function decide(toolId, action, btn) {
     else { toast("Added to My tools with a setup checklist", "checklist"); location.hash = "#mytools"; }
   } catch (e) { fail(e); if (btn) btn.disabled = false; }
 }
+
+// ---------- swipe deck ----------
+// One card per job: the best option the owner hasn't decided on yet. Pass on it and the next-best one appears.
+function deckCards() {
+  if (!S.rec) return [];
+  const out = [];
+  for (const j of S.rec.jobs) {
+    if (!["recommend", "use_builtin"].includes(j.status)) continue;
+    const decided = (j.options || []).some((o) => ["trial", "adopted"].includes(o.decision));
+    if (decided) continue;
+    const next = (j.options || []).find((o) => !o.decision && o.net_monthly != null && o.net_monthly > 0);
+    if (next) out.push({ job: j, o: next });
+  }
+  return out;
+}
+function swipeCardHTML({ job: j, o }, pos) {
+  const J = job(j.job), t = S.catalog.find((x) => x.id === o.tool_id) || {};
+  if (pos > 0) return html`<div class="h-full rounded-[28px]" style="background:linear-gradient(160deg, ${J.color}33, #ffffff 45%)"></div>`;
+  const good = (t.reviews || []).find((r) => r.relevant && (r.stars ?? 5) >= 4);
+  const bad = (t.reviews || []).find((r) => r.relevant && r.stars != null && r.stars <= 2);
+  const roi = o.monthly_cost > 0 ? o.monthly_value / o.monthly_cost : null;
+  const stamp = (dir, label, cls, where) => html`<div class="stamp ${cls} absolute ${where} z-50 px-4 py-1.5 rounded-xl font-head text-[24px] font-black tracking-widest uppercase" data-stamp="${dir}">${label}</div>`;
+  const rating = (t.ratings || []).find((r) => r.count > 0 && r.score != null);
+  return html`
+    ${stamp("right", o.kind === "builtin" ? "SET UP" : "TRY IT", "stamp-hire", "top-[44%] left-6 rotate-[-14deg]")}
+    ${stamp("left", "PASS", "stamp-pass", "top-[44%] right-6 rotate-[14deg]")}
+    <div class="relative px-5 pt-5 pb-4 text-white shrink-0" style="background:linear-gradient(135deg, #0e1c2f 0%, #0e1c2f 55%, ${J.color} 160%)">
+      <div class="flex items-center justify-between gap-2">
+        <span class="inline-flex items-center gap-1.5 text-[12px] font-semibold bg-white/12 rounded-full pl-1.5 pr-3 py-1" style="background:rgba(255,255,255,.12)">
+          <span class="w-6 h-6 rounded-full flex items-center justify-center" style="background:${J.color}">${icon(J.icon, "text-[15px] text-white")}</span>${j.label}</span>
+        ${j.is_pain ? html`<span class="badge" style="background:rgba(255,255,255,.15)">You asked</span>` : ""}
+      </div>
+      <div class="flex items-end justify-between gap-3 mt-4">
+        <div class="min-w-0">
+          ${o.kind === "builtin" ? html`<span class="badge bg-emerald-400 text-emerald-950">Free · you already have it</span>` : ""}
+          <h2 class="font-head font-bold text-[26px] leading-[1.05] mt-1">${o.name}</h2>
+          <p class="text-[12px] text-white/70 mt-1 truncate">${o.vendor} · ${o.plan}</p>
+        </div>
+        <div class="shrink-0 text-center"><div class="w-16 h-16 rounded-2xl bg-white text-ink flex flex-col items-center justify-center shadow-lg">
+          <span class="font-head text-[24px] font-bold leading-none">${o.score}</span><span class="text-[9px] uppercase tracking-wider text-muted mt-0.5">fit score</span></div></div>
+      </div>
+    </div>
+    <div class="px-5 py-4 flex flex-col gap-3 flex-1 min-h-0">
+      <div class="flex items-stretch gap-2">
+        <div class="flex-1 rounded-2xl bg-emerald-50 border border-emerald-100 p-3">
+          <div class="text-[10.5px] uppercase tracking-wider font-bold text-emerald-800">Worth to you</div>
+          <div class="font-head text-[26px] font-bold text-good leading-tight">~${usd(o.monthly_value)}<span class="text-[12px] font-semibold">/mo</span></div>
+          <div class="text-[11px] text-emerald-900/70">range ${usd(o.monthly_value_low)}–${usd(o.monthly_value_high)}</div></div>
+        <div class="w-[38%] rounded-2xl bg-soft p-3">
+          <div class="text-[10.5px] uppercase tracking-wider font-bold text-muted">Costs you</div>
+          <div class="font-head text-[22px] font-bold leading-tight">${o.monthly_cost === 0 ? "Free" : usd2(o.monthly_cost)}</div>
+          <div class="text-[11px] text-muted">${roi ? `${roi.toFixed(1)}× return` : "per month"}</div></div>
+      </div>
+      <p class="text-[13px] leading-snug text-ink/90">${j.facts.join(" ")}</p>
+      <div class="flex flex-wrap gap-1.5">
+        ${o.trial ? html`<span class="badge bg-soft2 text-ink !normal-case !tracking-normal !text-[11.5px]">${icon("schedule", "text-[14px]")} ${o.trial}</span>` : ""}
+        <span class="badge bg-soft2 text-ink !normal-case !tracking-normal !text-[11.5px]">${icon("star", "text-[14px]")} ${rating ? `${rating.score}★ · ${rating.count.toLocaleString()} on ${rating.platform}` : "No independent ratings yet"}</span>
+        ${o.unconfirmed_needs?.length ? html`<span class="badge bg-amber-100 text-amber-900 !normal-case !tracking-normal !text-[11.5px]">${icon("help", "text-[14px]")} ${o.unconfirmed_needs.join(", ")} unconfirmed</span>` : ""}
+      </div>
+      <div class="rounded-2xl border border-soft2 px-3 py-2.5">
+        <div class="text-[10.5px] uppercase tracking-wider font-bold text-muted mb-1">Why this pick</div>
+        <ul class="text-[12.5px] flex flex-col gap-0.5">${[o.breakdown.value.why[0], o.breakdown.fit.why.find((w) => /Connects|Made for/.test(w)), ...(o.breakdown.value.why.slice(1, 2))]
+          .filter(Boolean).map((w) => html`<li class="flex gap-1.5">${icon("check_circle", "text-[15px] text-good mt-[1px]")}<span>${w.replace(/ \(\d+\/\d+\)$/, "")}</span></li>`)}</ul></div>
+      <div class="mt-auto flex flex-col gap-1.5">
+        ${good && !bad ? html`<blockquote class="text-[12px] bg-emerald-50 rounded-xl px-3 py-2 line-clamp-2">👍 “${good.quote}” <span class="text-muted">· ${good.author}</span></blockquote>` : ""}
+        ${bad ? html`<blockquote class="text-[12px] bg-red-50 rounded-xl px-3 py-2 line-clamp-2">👎 “${bad.quote}” <span class="text-muted">· ${bad.author}</span></blockquote>` : ""}
+        ${!good && !bad ? html`<div class="text-[12px] bg-amber-50 rounded-xl px-3 py-2">${o.kind === "builtin" ? "A free feature of software you already pay for: nothing new to buy or learn." : "No independent reviews found yet. We'd rather say so than invent a rating. Try it free first."}</div>` : ""}
+        <div class="text-[11px] text-muted text-center pt-1">Tap for prices, sources & all reviews</div>
+      </div>
+    </div>`;
+}
+function renderSwipe() {
+  if (!S.rec) return renderStart();
+  const cards = deckCards();
+  view(html`
+    <section aria-labelledby="sw-title" class="max-w-md mx-auto flex flex-col">
+      <div class="flex items-center justify-between gap-2">
+        <h1 id="sw-title" class="font-head text-[20px] font-bold">Quick decide</h1>
+        <div class="flex items-center gap-1.5" aria-label="${cards.length} left">${S.rec.jobs.filter((j) => ["recommend", "use_builtin"].includes(j.status)).map((j) =>
+          html`<span class="h-2 rounded-full transition-all ${cards.some((c) => c.job.job === j.job) ? (cards[0].job.job === j.job ? "w-6" : "w-2") : "w-2 opacity-30"}" style="background:${job(j.job).color}"></span>`)}
+          <span class="text-[12px] text-muted ml-1">${cards.length ? `${cards.length} left` : "Done"}</span></div></div>
+      <p class="text-[12px] text-muted">Right = try it · Left = pass · Tap = details · <a href="#foryou" class="underline">full breakdown</a></p>
+      <div id="card-stack" class="relative w-full mt-3" style="height:min(620px, calc(100dvh - 255px)); min-height:500px"></div>
+      <div id="swipe-controls" class="flex items-center justify-center gap-4 mt-4 ${cards.length ? "" : "invisible"}">
+        <button class="w-14 h-14 rounded-full bg-white border-2 border-red-200 shadow-lg text-red-500 flex items-center justify-center active:scale-90 transition-transform" data-dir="left" aria-label="Pass">${icon("close", "text-[28px]")}</button>
+        <button class="w-12 h-12 rounded-full bg-white border border-line shadow text-ink flex items-center justify-center active:scale-90 transition-transform" data-dir="up" aria-label="See details">${icon("info", "text-[22px]")}</button>
+        <button class="w-14 h-14 rounded-full bg-white border-2 border-emerald-200 shadow-lg text-emerald-600 flex items-center justify-center active:scale-90 transition-transform" data-dir="right" aria-label="Start a trial">${icon("favorite", "text-[28px]")}</button>
+      </div>
+    </section>`);
+  const stack = $("#card-stack");
+  if (!cards.length) {
+    stack.innerHTML = html`<div class="absolute inset-0 card flex flex-col items-center justify-center text-center p-6 border-dashed">
+      ${icon("done_all", "text-[40px] text-accent")}<h2 class="font-head font-bold text-[20px] mt-2">You've decided on every job</h2>
+      <p class="text-[13px] text-muted mt-1 max-w-[280px]">Your trials and setup checklists are in My tools. Jobs where nothing pays off yet are explained on For you.</p>
+      <div class="flex gap-2 mt-4"><a href="#mytools" class="btn btn-primary">My tools</a><a href="#foryou" class="btn btn-ghost">For you</a></div></div>`.s;
+    return;
+  }
+  const visible = cards.slice(0, 3);
+  visible.slice().reverse().forEach((c) => {
+    const pos = visible.indexOf(c);
+    const el = document.createElement("article");
+    el.className = `absolute inset-0 rounded-[28px] bg-white shadow-2xl flex flex-col overflow-hidden border border-line/50 ${pos === 0 ? "card-drag cursor-grab" : "pointer-events-none"}`;
+    el.style.transform = `translate3d(0, ${pos * 14}px, 0) scale(${1 - pos * 0.05})`;
+    el.style.zIndex = String(30 - pos * 5);
+    el.style.transition = "transform .3s cubic-bezier(.2,.9,.3,1), opacity .3s ease";
+    el.setAttribute("aria-label", `${c.o.name} for ${c.job.label}`);
+    el.innerHTML = swipeCardHTML(c, pos).s;
+    if (pos === 0) { el.id = "top-card"; attachGestures(el); }
+    stack.appendChild(el);
+  });
+  $$("#swipe-controls [data-dir]").forEach((b) => (b.onclick = () => swipe(b.dataset.dir)));
+}
+function attachGestures(card) {
+  let x0 = null, y0 = 0, dx = 0, dy = 0;
+  const stamps = Object.fromEntries($$("[data-stamp]", card).map((s) => [s.dataset.stamp, s]));
+  const dirOf = (x, y) => (x > 90 ? "right" : x < -90 ? "left" : y < -90 && Math.abs(x) < 70 ? "up" : null);
+  card.addEventListener("pointerdown", (e) => { x0 = e.clientX; y0 = e.clientY; dx = dy = 0; card.setPointerCapture(e.pointerId); card.style.transition = "none"; });
+  card.addEventListener("pointermove", (e) => {
+    if (x0 == null) return;
+    dx = e.clientX - x0; dy = e.clientY - y0;
+    card.style.transform = `translate3d(${dx}px, ${dy}px, 0) rotate(${dx * 0.06}deg)`;
+    if (stamps.right) stamps.right.style.opacity = dx > 25 ? Math.min((dx - 25) / 80, 1) : 0;
+    if (stamps.left) stamps.left.style.opacity = dx < -25 ? Math.min((-dx - 25) / 80, 1) : 0;
+    card.style.boxShadow = dx > 25 ? "0 25px 50px -12px rgba(16,185,129,.45)" : dx < -25 ? "0 25px 50px -12px rgba(239,68,68,.45)" : "";
+  });
+  const end = () => {
+    if (x0 == null) return;
+    x0 = null;
+    card.style.boxShadow = "";
+    const dir = dirOf(dx, dy);
+    if (dir) return swipe(dir);
+    if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return swipe("up"); // a tap opens details
+    card.style.transition = "transform .35s cubic-bezier(.175,.885,.32,1.25)";
+    card.style.transform = "translate3d(0,0,0)";
+    Object.values(stamps).forEach((s) => (s.style.opacity = 0));
+  };
+  card.addEventListener("pointerup", end);
+  card.addEventListener("pointercancel", end);
+}
+let swiping = false;
+async function swipe(dir) {
+  const c = deckCards()[0];
+  if (!c || swiping) return;
+  const top = $("#top-card");
+  if (dir === "up") {
+    if (top) { top.style.transition = "transform .3s"; top.style.transform = "translate3d(0,0,0)"; $$("[data-stamp]", top).forEach((s) => (s.style.opacity = 0)); }
+    return openDossier(c.o.tool_id);
+  }
+  swiping = true;
+  if (top) {
+    top.style.transition = "transform .4s ease-out, opacity .4s ease-out";
+    top.style.transform = dir === "right" ? "translate3d(140%,40px,0) rotate(24deg)" : "translate3d(-140%,40px,0) rotate(-24deg)";
+    top.style.opacity = "0";
+  }
+  try {
+    await post(`/api/businesses/${S.biz.id}/picks`, { tool_id: c.o.tool_id, action: dir === "right" ? "trial" : "pass" });
+    toast(dir === "right" ? `${c.o.name}: added to My tools with a setup checklist` : `Passed on ${c.o.name}`, dir === "right" ? "favorite" : "close");
+    await refresh();
+  } catch (e) { fail(e); }
+  swiping = false;
+  setTimeout(() => { if ((location.hash || "").startsWith("#swipe")) renderSwipe(); }, 250);
+}
+document.addEventListener("keydown", (e) => {
+  if (!(location.hash || "").startsWith("#swipe") || !$("#sheet").classList.contains("hidden") || !$("#modal").classList.contains("hidden")) return;
+  const dir = { ArrowLeft: "left", ArrowUp: "up", ArrowRight: "right" }[e.key];
+  if (dir) { e.preventDefault(); swipe(dir); }
+});
 
 // ---------- compare ----------
 function openCompareJob(jobKey) {

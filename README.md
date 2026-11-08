@@ -11,6 +11,7 @@ It also says when **not** to buy: when a free feature they already own does the 
 - **31 attributed customer reviews** (praise and complaints) and 3,430 platform ratings counted, with off-topic reviews flagged and excluded ([research](docs/RESEARCH.md))
 - **Every assumption sourced or labeled** as a ShopFloor assumption ([research.json](shopfloor/catalog/research.json))
 - **Evaluation:** 0 of 44 rule-breaking picks vs 13 for a "top-rated" baseline and 23 for "cheapest" ([EVALUATION.md](docs/EVALUATION.md))
+- **Swipe-to-decide UI:** one card per job (right = start a trial, left = pass and see the next-best option, tap = full evidence), with a Details list view for side-by-side comparison
 - **Adoption loop:** trial → setup checklist → 30-day owner check-in → calibration → published accuracy, plus a clean exit path
 
 ## Quickstart
