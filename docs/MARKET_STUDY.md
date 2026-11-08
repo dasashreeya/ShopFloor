@@ -38,6 +38,15 @@ invoices hit the majority. Owners already use AI but juggle many tools, and they
 
 ## 4. User stories (personas are composites)
 
+### Elena: family Mexican restaurant + catering, Riverdale Park, MD (the demo story)
+*"Friday nights the phone rings off the hook, 45 Google reviews a month sit unanswered, catering clients pay late, and my inbox is a mess. Half my customers speak Spanish. I can invest $700 a month if it pays off."*
+
+- Uses: Toast, OpenTable, QuickBooks Online, Gmail, Google Business Profile
+- 250 calls/week, 35% missed; $38 average order; $110K/month; 45 reviews/month (10% answered); 25 catering invoices/month at ~$900, 45% late; 8 h/week of email for 2 people
+- **When** the Friday rush hits, **I want** every caller answered in English or Spanish **so I can** keep the order.
+- **When** I pick tools, **I want** the free thing I already own suggested first **so I can** spend my $700 only where it pays.
+- **Walkthrough:** see [DEMO_SCRIPT.md](DEMO_SCRIPT.md) (7 cards: 4 right, 3 left).
+
 ### Maria: family taqueria, College Park, MD
 *"I lose lunch-rush calls and I never have time to answer Google reviews. Half my regulars speak Spanish. I can spend maybe $150 a month."*
 

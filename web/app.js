@@ -57,6 +57,13 @@ const ORIGIN = (o) => o === "owner" ? ["Your number", "bg-navy text-white"] : o?
 const GRADE = { owner: "", published: "Published source", peer_reviewed: "Peer-reviewed", secondary: "Secondary source", assumption: "ShopFloor assumption" };
 // Demo stories: composite personas built from the market study (docs/MARKET_STUDY.md). Numbers are typical, not a real business.
 const STORIES = {
+  elena: { who: "Elena", emoji: "🌶️", role: "Family Mexican restaurant + catering · Riverdale Park, MD", color: "#ef4444", featured: true,
+    quote: "Friday nights the phone rings off the hook, 45 Google reviews a month sit unanswered, catering clients pay late, and my inbox is a mess. Half my customers speak Spanish. I can invest $700 a month if it pays off.",
+    data: { name: "Casa Elena (demo story)", industry: "restaurant", stack: ["toast", "opentable", "google_business", "gmail", "quickbooks"],
+      budget_usd_month: 700, pains: ["missed_calls", "review_replies", "invoice_chasing", "email_triage"], needs: { spanish: true },
+      metrics: { calls_per_week: 250, missed_share: 0.35, avg_ticket: 38, reviews_per_month: 45, reply_share: 0.1, monthly_revenue: 110000,
+                 invoices_per_month: 25, avg_invoice: 900, late_share: 0.45, email_hours_per_week: 8, email_users: 2, owner_hourly_value: 40,
+                 uses_builtin_reminders: false } } },
   maria: { who: "Maria", emoji: "🌮", role: "Family taqueria · College Park, MD", color: "#ff8a00",
     quote: "I lose lunch-rush calls and never have time for Google reviews. Half my regulars speak Spanish. I can spend about $150 a month.",
     data: { name: "Maria's Taqueria (demo story)", industry: "restaurant", stack: ["square", "google_business", "gmail", "quickbooks"],
@@ -81,7 +88,8 @@ function startStory(key) {
 }
 function storyCards(dark = false) {
   return html`<div class="grid gap-2.5 sm:grid-cols-3">${Object.entries(STORIES).map(([k, st]) => html`
-    <button type="button" class="text-left rounded-2xl p-3.5 flex flex-col gap-1.5 transition-transform active:scale-[.98] ${dark ? "bg-white/10 hover:bg-white/15" : "bg-white border border-soft2 hover:border-line"}" data-example="${k}">
+    <button type="button" class="text-left rounded-2xl p-3.5 flex flex-col gap-1.5 transition-transform active:scale-[.98] ${st.featured ? "sm:col-span-3 ring-2 ring-[#ff8a00]" : ""} ${dark ? "bg-white/10 hover:bg-white/15" : "bg-white border border-soft2 hover:border-line"}" data-example="${k}">
+      ${st.featured ? html`<span class="badge bg-[#ff8a00] text-[#2f1500] self-start">Full demo · all 4 jobs</span>` : ""}
       <div class="flex items-center gap-2.5"><span class="w-10 h-10 rounded-full flex items-center justify-center text-[20px]" style="background:${st.color}33">${st.emoji}</span>
         <div class="min-w-0"><div class="font-head font-bold text-[15px]">${st.who}</div><div class="text-[11.5px] ${dark ? "text-white/70" : "text-muted"} truncate">${st.role}</div></div></div>
       <p class="text-[12.5px] leading-snug ${dark ? "text-white/85" : "text-ink/80"}">“${st.quote}”</p>
@@ -100,6 +108,11 @@ async function boot() {
   const [cat, res] = await Promise.all([api("/api/catalog"), api("/api/research")]);
   S.catalog = cat.tools; S.research = res;
   if (S.biz) await refresh();
+  if (!S.biz && (!location.hash || location.hash === "#swipe")) {
+    // First visit: load the featured demo story so the swipe deck is there immediately.
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
+    return startStory("elena");
+  }
   if (!S.biz && !["#browse", "#research"].includes(location.hash)) location.hash = "#start";
   render();
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => {});
@@ -126,7 +139,7 @@ const view = (h) => { $("#view").innerHTML = h.s; };
 let draft = null;
 function renderStart() {
   const editing = !!S.biz;
-  draft = draft || (editing ? structuredClone({ ...S.biz }) : { name: "", industry: "", stack: [], budget_usd_month: null, pains: [], needs: {}, metrics: {} });
+  draft = draft || (editing ? structuredClone({ ...S.biz }) : structuredClone(STORIES.elena.data));  // new visitors start from the demo story
   const d = draft, m = d.metrics || (d.metrics = {});
   const chips = (list, sel, attr) => list.map(([k, l]) => html`<button type="button" class="chip" data-${attr}="${k}" aria-pressed="${String(sel(k))}">${l}</button>`);
   const num = (key, label, hint = "", opts = {}) => html`
@@ -143,7 +156,7 @@ function renderStart() {
           <p class="text-[14px] text-white/80 mt-2">Tell us about your shop in 2 minutes. We compare ${S.research?.stats.tools || ""} researched AI tools on <b>your</b> numbers, your budget and the software you already pay for, with real prices and real reviews (good and bad).</p>
           <p class="font-head font-bold text-[15px] mt-5 mb-2">Try it as a real-world owner</p>
           ${storyCards(true)}
-          <p class="text-[11px] text-white/60 mt-2">Demo stories are composites built from our market study (typical numbers, not real businesses). Or fill in your own below.</p>
+          <p class="text-[11px] text-white/60 mt-2">Demo stories are composites built from our market study (typical numbers, not real businesses). The form below is pre-filled with Elena's numbers: change anything, or just tap the orange button.</p>
         </div>`}
       ${editing ? html`<h1 id="start-title" class="font-head text-[22px] font-bold mb-3">Your business profile</h1>` : ""}
       <form id="intake" class="flex flex-col gap-5" novalidate>
@@ -198,7 +211,7 @@ function renderStart() {
   $$("[data-example]").forEach((b) => (b.onclick = () => startStory(b.dataset.example)));
   if (editing) wireImport();
   $("#f-reset") && ($("#f-reset").onclick = () => { store.set("sf.biz", null); S.biz = null; S.rec = null; draft = null; location.hash = "#start"; render(); });
-  $("#intake").onsubmit = (e) => { e.preventDefault(); sync(); if (!editing) store.set("sf.story", null); submitIntake(); };
+  $("#intake").onsubmit = (e) => { e.preventDefault(); sync(); if (!editing) store.set("sf.story", d.name === STORIES.elena.data.name ? "elena" : null); submitIntake(); };
 }
 
 async function submitIntake() {
