@@ -1,0 +1,11 @@
+{
+  "name": "ShopFloor: AI tools for small business",
+  "short_name": "ShopFloor",
+  "description": "Find, compare and adopt AI tools, scored on your own numbers.",
+  "start_url": "/#foryou",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f8f9ff",
+  "theme_color": "#0e1c2f",
+  "icons": [{"src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}, {"src": "/assets/logo-mark.png", "sizes": "96x96", "type": "image/png"}]
+}

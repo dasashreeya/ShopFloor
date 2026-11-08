@@ -36,11 +36,12 @@ class SimulatedToolAdapter:
     def attempt(self, task_input: str) -> LLMResult:
         return self.llm.chat(
             [
-                {"role": "system", "content": f"[task:tool-attempt] {self.tool.behavior}"},
+                {"role": "system", "content": f"[task:tool-attempt] {self.tool.behavior} "
+                 "Reply with exactly what you would send or say to the customer, briefly."},
                 {"role": "user", "content": task_input},
             ],
             model=self.model,
-            max_tokens=300,
+            max_tokens=1200,  # reasoning tokens count; a low cap truncates replies and looks like a tool failure
         )
 
 
@@ -59,7 +60,7 @@ def judge(llm: LLM, task: dict, output: str) -> tuple[bool, str, float]:
         ],
         model=get_settings().model_judge,
         temperature=0.0,
-        max_tokens=1000,  # judge may be a reasoning model; thinking tokens count here
+        max_tokens=3000,  # judge may be a reasoning model; thinking tokens count here
         schema=JUDGE_SCHEMA,
         schema_name="grade",
     )
@@ -68,32 +69,36 @@ def judge(llm: LLM, task: dict, output: str) -> tuple[bool, str, float]:
 
 
 def run_lab(tool: Tool, llm: LLM, adapter: ToolAdapter | None = None) -> LabScore | None:
-    tasks = load_golden(tool.job)
+    job = tool.jobs[0]
+    tasks = load_golden(job)
     if not tasks:
         return None
     adapter = adapter or SimulatedToolAdapter(tool, llm)
-    passed, latencies, tool_cost, failures, model = 0, [], 0.0, [], ""
+    passed, latencies, tool_cost, failures, errors, model = 0, [], 0.0, [], [], ""
     for task in tasks:
         try:
             out = adapter.attempt(task["input"])
+            if not out.text.strip():
+                raise LLMError("empty reply from the simulated tool")
             ok, reason, _judge_cost = judge(llm, task, out.text)
-        except LLMError as e:
-            ok, reason, out = False, f"error: {e}", None
-        if out is not None:
-            latencies.append(out.latency_s)
-            tool_cost += out.usage.cost_usd
-            model = out.model
+        except LLMError as e:  # infrastructure problems are not tool failures: excluded from accuracy
+            errors.append({"task": task["id"], "reason": f"error: {e}"})
+            continue
+        latencies.append(out.latency_s)
+        tool_cost += out.usage.cost_usd
+        model = out.model
         if ok:
             passed += 1
         else:
-            failures.append({"task": task["id"], "reason": reason})
+            failures.append({"task": task["id"], "reason": reason, "output": out.text[:600]})
+    graded = len(tasks) - len(errors)
     return LabScore(
         tool_id=tool.id,
-        job=tool.job,
-        accuracy=passed / len(tasks),
+        job=job,
+        accuracy=passed / graded if graded else 0.0,
         p50_latency_s=statistics.median(latencies) if latencies else 0.0,
-        cost_per_resolved_usd=tool_cost / passed if passed else float("inf"),
-        n_tasks=len(tasks),
+        cost_per_resolved_usd=tool_cost / passed if passed else None,
+        n_tasks=graded,
         model=model,
-        failures=failures,
+        failures=failures + errors,
     )

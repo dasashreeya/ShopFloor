@@ -6,7 +6,7 @@ from shopfloor.outcomes.calibration import calibrate, published_accuracy
 
 def outcomes(n, ratio, seed=1):
     rng = random.Random(seed)
-    return [Outcome(hire_id=f"h{i}", prediction_id=f"p{i}", job=Job.MISSED_CALLS, days_measured=30,
+    return [Outcome(pick_id=f"h{i}", business_id="b", tool_id="t", job=Job.MISSED_CALLS, days_since_start=30,
                     predicted_monthly_usd=100, raw_predicted_monthly_usd=100, predicted_low=60, predicted_high=140,
                     actual_monthly_usd=100 * ratio * rng.lognormvariate(0, 0.3)) for i in range(n)]
 
@@ -25,5 +25,5 @@ def test_converges_and_tightens_with_evidence():
 
 def test_published_accuracy_shape():
     [row] = published_accuracy(outcomes(10, 0.8))
-    assert row["job"] == "missed_calls" and row["verified_hires"] == 10
+    assert row["job"] == "missed_calls" and row["reported_outcomes"] == 10
     assert 0 <= row["interval_coverage"] <= 1

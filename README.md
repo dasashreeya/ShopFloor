@@ -1,115 +1,72 @@
 # ShopFloor
 
-**We predict the ROI of an AI tool before a small business buys it, and we come back and check whether we were right.**
+**Find, compare and adopt AI tools for a small business, scored on that business's own numbers.**
 
-A business connects what it already uses (Square/Toast, QuickBooks, Gmail, its phone line, Google Business Profile).
-ShopFloor has independently crawled POS and accounting marketplaces for AI tools, scored them in a lab on golden-set
-tasks, and replays the business's own last 90 days to estimate what each tool would have done. The output is a deck
-of cards, one job at a time:
+A pizzeria owner, an HVAC tech and a salon owner get *different* answers. ShopFloor asks what software they already
+use, what hurts, their budget and a few numbers (or reads their call-log / invoice / sales export). It then ranks real
+AI tools on value at their volume, fit with their stack, independent customer evidence, and price transparency.
+It also says when **not** to buy: when a free feature they already own does the job, or when their volume is below break-even.
 
-> You missed 214 calls in the last 90 days, 157 of them over the lunch rush.
-> RingBack would have recovered roughly 14 orders a month: about +$412/month against $29/month.
-
-Swipe **left** to pass, **up** for a 14-day shadow shift (live data, read-only scopes, no actions), **right** to hire.
-**Fire** revokes access, exports the data and cancels billing. Thirty days after a hire we measure what actually happened,
-recalibrate every future prediction for that job, and publish our own accuracy.
-
-All LLM calls go through **[OpenRouter](https://openrouter.ai)**.
+- **18 real tools and built-ins** across 4 jobs (missed calls, review replies, invoice chasing, email), with real plans and prices, trial and contract terms, each linked to its source and dated ([catalog](shopfloor/catalog/tools.json))
+- **31 attributed customer reviews** (praise and complaints) and 3,430 platform ratings counted, with off-topic reviews flagged and excluded ([research](docs/RESEARCH.md))
+- **Every assumption sourced or labeled** as a ShopFloor assumption ([research.json](shopfloor/catalog/research.json))
+- **Evaluation:** 0 of 44 rule-breaking picks vs 13 for a "top-rated" baseline and 23 for "cheapest" ([EVALUATION.md](docs/EVALUATION.md))
+- **Adoption loop:** trial → setup checklist → 30-day owner check-in → calibration → published accuracy, plus a clean exit path
 
 ## Quickstart
 
 ```bash
-uv sync                                   # Python 3.11+, installs deps into .venv
-cp .env.example .env                      # add OPENROUTER_API_KEY (optional, see below)
-uv run pytest -q                          # 24 tests, fully offline
-uv run python scripts/demo.py --lab       # whole loop in the terminal
-uv run uvicorn shopfloor.api.main:app --reload   # UI at http://localhost:8000
-uv run python scripts/smoke_openrouter.py # one cheap live call per configured model
+uv sync
+uv run pytest -q                                  # 27 tests, offline
+uv run uvicorn shopfloor.api.main:app --reload    # http://localhost:8000
+uv run python scripts/evaluate.py                 # regenerates docs/EVALUATION.md
 ```
 
-With no `OPENROUTER_API_KEY`, the app runs on a deterministic `FakeLLM`, so tests, CI and offline demos need no key.
-Set `SHOPFLOOR_LLM_MODE=openrouter` to force live calls, or `fake` to force offline.
+With no `OPENROUTER_API_KEY` the app runs on a deterministic offline LLM. The LLM is only used for "Try it on your
+example", URL discovery and the scenario lab; **recommendations and all money math never use an LLM**.
 
-| Env var | Default | Used for |
-|---|---|---|
-| `SHOPFLOOR_MODEL_FAST` | `anthropic/claude-haiku-5.5` | simulated tools, listing extraction, card copy, shadow drafts |
-| `SHOPFLOOR_MODEL_SMART` | `anthropic/claude-sonnet-5.5` | reserved for harder tasks (agents, crews) |
-| `SHOPFLOOR_MODEL_JUDGE` | `google/gemini-3.8-flash` | lab grading (deliberately a different model family from the tools) |
+## Deploy (judge-accessible link)
 
-## How the loop works
+- **Render:** New > Blueprint > this repo (uses `render.yaml` + `Dockerfile`). Set `OPENROUTER_API_KEY` (optional).
+- **Any Docker host:** `docker build -t shopfloor . && docker run -p 8000:8000 -e OPENROUTER_API_KEY=... shopfloor`
+- AI endpoints are rate-limited per IP (`SHOPFLOOR_LLM_PER_HOUR`, default 20). Each visitor gets their own business record (unguessable id).
+- It's a PWA: on a phone, "Add to Home Screen" installs it like an app.
+
+## How a recommendation is made
 
 ```
- marketplaces ──crawl──▶ Tool catalog ──golden sets──▶ LabScore (accuracy, p50 latency, $/resolved task)
-                                                              │
- connectors ──90 days of Events──▶ replay estimators ◀────────┘
-                                          │  × calibration factor (learned from verified outcomes)
-                                          ▼
-                                   Prediction ──▶ Card ──swipe──▶ pass | shadow (14d) | hire ──▶ fire
-                                                                              │
-                                              day 30: measure actual ◀────────┘
-                                                     │
-                                  Outcome ──▶ calibration (per job) ──▶ published accuracy
+owner intake / CSV ─▶ estimators (owner numbers + sourced assumptions) ─▶ job value low/mid/high
+                                                                          │
+catalog (real plans) ─▶ hard rules (industry, software, budget, must-haves) ─▶ cost at YOUR volume
+                                                                          │
+                      score = value 40 + fit 25 + evidence 20 + transparency 15
+                                                                          │
+   per job: use free built-in │ recommend │ don't buy (break-even) │ need data ─▶ budget-optimal stack
+                                                                          │
+                trial ─▶ checklist ─▶ day-30 owner check-in ─▶ calibration per job ─▶ published accuracy
 ```
 
-Design rules:
-1. **LLMs never compute money.** Estimators are deterministic math over events plus named low/mid/high assumptions.
-   An LLM may rephrase card copy, but a rewrite that adds any number not in the facts is thrown away (`deck/cards.py`).
-2. **Every assumption is a prior.** Calibration models `log(actual / raw prediction)` per job with a Normal prior.
-   The correction factor converges and the interval tightens as hires get verified (`outcomes/calibration.py`).
-   `tests/test_learning_loop.py` checks that it recovers a hidden true effect.
-3. **Vendors don't submit themselves.** Discovery plugs in `MarketplaceSource`s. Free-text listings are normalized by an LLM
-   against a strict JSON schema.
-4. **Lab tools are simulated until a vendor gives us a sandbox.** `SimulatedToolAdapter` runs the tool's documented behavior
-   on an OpenRouter model. Real adapters implement `ToolAdapter.attempt()`.
-
-## Repo layout
+## Layout
 
 ```
 shopfloor/
-  config.py              settings (.env), model routing, fake/live switch
-  llm/                   OpenRouter client (retries, JSON-schema output, usage.cost), FakeLLM
-  models.py              domain: Business, Event, Tool, LabScore, Prediction, Card, Hire, Crew, Outcome
-  store.py               SQLite JSON doc store (swap for Postgres)
-  connectors/            Connector protocol + OAuth scopes; synthetic 90-day history for demos
-  discovery/             marketplace crawler + seed listings
-  lab/                   golden sets + runner + LLM judge
-  replay/estimators.py   per-job ROI math (missed calls, review replies, invoice chasing, email triage)
-  deck/cards.py          prediction -> card copy (number-guarded)
-  hiring/lifecycle.py    swipe / shadow / promote / fire, crews + event routing
-  outcomes/              30-day measurement (Attribution seam) + calibration + published accuracy
-  service.py             orchestrates the loop
-  api/                   FastAPI app (REST + serves web/)
-web/                     zero-build UI on the Google Stitch design: Decision Deck, Active Roster,
-                         Outcomes & Lab, Integrations, Tool dossier (drag, buttons, or arrow keys)
-design/stitch/           original Stitch export (static mockups + design systems), kept for reference
-scripts/                 demo.py, smoke_openrouter.py
-tests/
-docs/ARCHITECTURE.md     extension points and roadmap
+  catalog/tools.json       researched tools: plans, terms, ratings, reviews, sources
+  catalog/research.json    sourced assumptions, research findings, SBA resources
+  engine/estimators.py     job value from owner numbers + labeled assumptions
+  engine/pricing.py        cheapest published plan for the owner's volume (overage included)
+  engine/recommend.py      hard rules, scoring, no-purchase/built-in logic, budget-optimal stack
+  engine/intake.py         CSV import: call logs, invoice lists, POS sales exports
+  discovery.py             paste a URL -> LLM-extracted unverified candidate listing
+  outcomes/                owner check-ins and Bayesian per-job calibration
+  lab/                     scenario tests (simulated vendor behavior, graded by a second model family)
+  service.py, api/         orchestration and FastAPI
+web/                       zero-build mobile-first PWA
+scripts/evaluate.py        persona evaluation vs baselines
+docs/                      RESEARCH, EVALUATION, PLAN_16_WEEKS, VIDEO_SCRIPT, ARCHITECTURE
 ```
 
-## API
+## Honest scope
 
-| Method | Path | |
-|---|---|---|
-| GET | `/api/health` | LLM backend, tool count |
-| GET | `/api/tools` | catalog with lab scores |
-| POST | `/api/crawl` | re-run discovery |
-| POST | `/api/lab/{tool_id}` | score a tool on its golden set |
-| POST | `/api/businesses` | `{name, connectors?}` onboard (demo: synthetic history) |
-| GET | `/api/businesses/{id}` | business |
-| GET | `/api/businesses/{id}/deck` | undecided cards, best net ROI first (re-dealt if a newer lab run exists) |
-| GET | `/api/businesses/{id}/roster` | hires joined with tool, prediction and outcome |
-| GET | `/api/businesses/{id}/tools/{tool_id}/replay` | hour-of-day histogram of when the tool would have acted |
-| POST | `/api/cards/{id}/swipe` | `{direction: left\|up\|right}` |
-| POST | `/api/businesses/{id}/crew` | `{card_ids}` hire several tools as a crew |
-| POST | `/api/hires/{id}/promote` | shadow -> hired |
-| POST | `/api/hires/{id}/fire` | revoke + export + cancel billing |
-| POST | `/api/hires/{id}/measure` | 30-day outcome vs prediction |
-| GET | `/api/accuracy` | published accuracy per job |
-
-## What is stubbed (on purpose)
-
-- **Connectors:** demo businesses use `connectors/synthetic.py`. Real Square/Toast/QuickBooks/Gmail/phone/GBP clients implement `Connector.fetch()`.
-- **Outcome attribution:** `SimulatedAttribution` has a hidden true effect per job. The real one joins tool action logs to POS records.
-- **Billing and token revocation:** `fire()` marks them done and has TODOs where provider calls go.
-- **Marketplace crawling:** `SeedFileSource` reads `discovery/seed_listings.json`. Tool names and vendors there are fictional samples.
+Real today: catalog data, prices, reviews, owner inputs and CSV parsing, the recommender, adoption tracking.
+Simulated and labeled as such: "Try it" replies and scenario lab results (vendor behavior on an LLM, not the vendor's product).
+Not yet: direct OAuth connectors, vendor sandboxes, scheduled marketplace crawling, measured outcomes from real pilots. See [docs/PLAN_16_WEEKS.md](docs/PLAN_16_WEEKS.md).

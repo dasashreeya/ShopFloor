@@ -1,0 +1,264 @@
+[
+ {
+  "tool_id": "rosie",
+  "job": "missed_calls",
+  "accuracy": 0.4,
+  "p50_latency_s": 2.523306900053285,
+  "cost_per_resolved_usd": 0.00059535,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:47:49.618920Z",
+  "failures": [
+   {
+    "task": "mc1",
+    "reason": "The output invents an online ordering link ('I can text you our ordering link'), violating the 'no invented promises' rule, and does not invite the customer to reply with their order directly.",
+    "output": "Hi, this is Rosie from Luna Taqueria. Sorry we missed your call! We're pickup only. Could you reply with your name and what you're calling about? If you'd like to place an order, I can text you our ordering link."
+   },
+   {
+    "task": "mc2",
+    "reason": "The output acknowledges the two carnitas bowls and does not invent a price, but it fails to ask to confirm a pickup time as required by the rubric.",
+    "output": "Hi, this is Rosie, the automated assistant for [Business Name]. Sorry we missed your call. I got your voicemail asking for your usual two carnitas bowls. I can't place orders over text, but I can have the owner confirm it with you. Could you reply with your name and the best number to reach you? If you'd rather order online, you can use this link: [order link]."
+   },
+   {
+    "task": "mc4",
+    "reason": "The output defers the discount request to the owner ('I'll pass your request to the owner') rather than declining the discount as required by the rubric.",
+    "output": "Hi, this is Rosie, the virtual assistant for [Business Name]. Sorry we missed your call. I can't offer discounts or set prices, but I'll pass your request to the owner. Could you reply with your name and the service you're interested in? You can also book directly here: [booking link]. Thanks for your patience!"
+   }
+  ]
+ },
+ {
+  "tool_id": "goodcall",
+  "job": "missed_calls",
+  "accuracy": 0.4,
+  "p50_latency_s": 2.4076954999472946,
+  "cost_per_resolved_usd": 0.00041034999999999997,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:48:15.651354Z",
+  "failures": [
+   {
+    "task": "mc1",
+    "reason": "The message invents a promise that the owner will follow up soon, and it asks what they are looking for rather than inviting them to reply with an order.",
+    "output": "Hi, this is Luna Taqueria. Sorry we missed your call. Could you text us your name and the best number to reach you, and let us know what you're looking for? The owner will follow up with you soon."
+   },
+   {
+    "task": "mc2",
+    "reason": "The response does not ask to confirm a pickup time, which is explicitly required by the rubric.",
+    "output": "\"Hi, this is [Business Name] returning your call about your order for 2 carnitas bowls. Thanks for calling. Could you confirm your name and the best number to reach you? The owner will follow up to confirm your order and let you know the details.\""
+   },
+   {
+    "task": "mc4",
+    "reason": "The output defers the discount request to the owner rather than declining it as required by the rubric.",
+    "output": "Hi, this is the automated assistant for [Business Name]. Sorry we missed your call. I can't offer or approve discounts myself, but I've passed your request to the owner, who will follow up with you. May I have your name and the best number to reach you?"
+   }
+  ]
+ },
+ {
+  "tool_id": "smith-ai",
+  "job": "missed_calls",
+  "accuracy": 1.0,
+  "p50_latency_s": 2.0660824000369757,
+  "cost_per_resolved_usd": 0.00013654000000000002,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:48:40.264532Z",
+  "failures": []
+ },
+ {
+  "tool_id": "my-ai-front-desk",
+  "job": "missed_calls",
+  "accuracy": 0.8,
+  "p50_latency_s": 2.5367633000714704,
+  "cost_per_resolved_usd": 0.000204425,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:49:07.410366Z",
+  "failures": [
+   {
+    "task": "mc1",
+    "reason": "The output asks the customer to reply with their name and the reason for their call (and directs ordering to a link) rather than inviting them to reply directly with an order as required by the rubric.",
+    "output": "Hi, this is Luna Taqueria. Sorry we missed your call! We're pickup only. What can we help you with? Please reply with your name and the reason for your call, and we'll get back to you. You can also use this link to place a pickup order: [follow-up link]"
+   }
+  ]
+ },
+ {
+  "tool_id": "jobber-receptionist",
+  "job": "missed_calls",
+  "accuracy": 0.2,
+  "p50_latency_s": 1.9670616999501362,
+  "cost_per_resolved_usd": 0.0007077,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:49:31.357327Z",
+  "failures": [
+   {
+    "task": "mc1",
+    "reason": "The output is completely inappropriate for a restaurant, referring to scheduling a home services technician instead of inviting the customer to place a food pickup order.",
+    "output": "Hi, this is Home Services returning your call from Luna Taqueria. Sorry we missed you. To get a technician scheduled, could you reply with:\n\n1. The service address\n2. What's going on\n3. A good time window for a visit\n\nIf you smell gas, leave the building and call 911 or your gas utility right away. If you have flooding or no heat, reply \"EMERGENCY\" and we'll connect you to our on-call technician."
+   },
+   {
+    "task": "mc2",
+    "reason": "The output fails to acknowledge the 2 carnitas bowls and does not ask to confirm a pickup time as required by the rubric.",
+    "output": "Hi, this is [Company Name]'s scheduling line. We handle home-service repairs and visits, so we can't take food orders. If you meant to reach a restaurant, please call them directly. If you need a technician, reply with your address and a short description of the problem, and I'll get you booked."
+   },
+   {
+    "task": "mc3",
+    "reason": "The response does not route the caller to a human staff member or state that staff will confirm.",
+    "output": "I'm sorry, I'm not able to help with that one. This line is for home-services bookings, and I don't have information about grocery products. If you're looking for a home-services appointment, I'm happy to help with that. Otherwise, a local grocery store or the product's manufacturer would be your best source for gluten-free tortilla info, and checking the label for \"certified gluten-free\" is a good way to confirm it's safe for your child's celiac needs."
+   },
+   {
+    "task": "mc5",
+    "reason": "The output does not recognize that the request is for catering; it treats the inquiry as a generic field service call and asks for details to schedule a visit instead.",
+    "output": "Hi, this is the scheduling assistant for [Company Name]. Sorry we missed your call. To help you quickly, could you reply with the service address, a short description of what you need done, and your preferred time on Friday? I can check availability and offer you a visit."
+   }
+  ]
+ },
+ {
+  "tool_id": "slang-ai",
+  "job": "missed_calls",
+  "accuracy": 0.8,
+  "p50_latency_s": 2.36182450002525,
+  "cost_per_resolved_usd": 0.000166425,
+  "n_tasks": 5,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:49:57.161046Z",
+  "failures": [
+   {
+    "task": "mc2",
+    "reason": "The output fails to ask the customer to confirm their pickup time, which is explicitly required by the rubric.",
+    "output": "Hi, this is [Restaurant Name] returning your call. Thanks for reaching out. I can't see your usual order or confirm availability from here, so I'm passing your request for two carnitas bowls to our team. Someone will call you back to confirm the order. If you'd like, you can also call us back at [phone number]."
+   }
+  ]
+ },
+ {
+  "tool_id": "nicejob",
+  "job": "review_replies",
+  "accuracy": 1.0,
+  "p50_latency_s": 0.8792680000187829,
+  "cost_per_resolved_usd": 5.26e-05,
+  "n_tasks": 3,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:50:10.864633Z",
+  "failures": []
+ },
+ {
+  "tool_id": "birdeye",
+  "job": "review_replies",
+  "accuracy": 0.6666666666666666,
+  "p50_latency_s": 0.9544296999229118,
+  "cost_per_resolved_usd": 8.585e-05,
+  "n_tasks": 3,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:50:26.791685Z",
+  "failures": [
+   {
+    "task": "rr2",
+    "reason": "The response does not explicitly invite the customer to contact a manager, only asking them to reach out to 'us'.",
+    "output": "I'm sorry about your experience. Forty minutes is far too long to wait for a pickup, and receiving cold food on top of that is not what we want for any guest. I'd like to look into what went wrong. Could you reach out to us directly at [phone or email] so we can discuss it further? We appreciate you letting us know."
+   }
+  ]
+ },
+ {
+  "tool_id": "podium",
+  "job": "review_replies",
+  "accuracy": 0.3333333333333333,
+  "p50_latency_s": 0.9521450999891385,
+  "cost_per_resolved_usd": 0.0001261,
+  "n_tasks": 3,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:50:48.214206Z",
+  "failures": [
+   {
+    "task": "rr2",
+    "reason": "The response asks the customer to 'reach out to us directly' rather than inviting contact specifically with the manager as required by the rubric.",
+    "output": "I'm sorry about the wait and the cold food, that's not the experience we want you to have. I've passed your feedback to the owner so they can look into what happened. We'd appreciate the chance to make it right, so please reach out to us directly."
+   },
+   {
+    "task": "rr3",
+    "reason": "The response does not offer manager contact details or provide a way for the customer to contact management directly to resolve the issue offline.",
+    "output": "I'm sorry your experience fell short of what you expected. I've passed your refund request to the owner, who will reach out to you directly to make it right. Thank you for letting us know."
+   }
+  ]
+ },
+ {
+  "tool_id": "paidnice",
+  "job": "invoice_chasing",
+  "accuracy": 1.0,
+  "p50_latency_s": 1.4575602000113577,
+  "cost_per_resolved_usd": 0.0001248,
+  "n_tasks": 2,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:50:56.693470Z",
+  "failures": []
+ },
+ {
+  "tool_id": "chaser",
+  "job": "invoice_chasing",
+  "accuracy": 1.0,
+  "p50_latency_s": 2.1824937000637874,
+  "cost_per_resolved_usd": 0.0001965,
+  "n_tasks": 2,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:51:07.357140Z",
+  "failures": []
+ },
+ {
+  "tool_id": "fyxer",
+  "job": "email_triage",
+  "accuracy": 0.5,
+  "p50_latency_s": 1.789865099999588,
+  "cost_per_resolved_usd": 0.0003074,
+  "n_tasks": 2,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:51:21.288420Z",
+  "failures": [
+   {
+    "task": "et1",
+    "reason": "The output provides a helpful draft reply asking for details, but it fails to classify the inquiry as catering as required by the rubric.",
+    "output": "Hi there,\n\nThanks for reaching out, and we'd be happy to help with lunch for 25 next Thursday!\n\nTo check availability and get you an accurate quote, could you let us know:\n\n- Your preferred pickup or delivery time\n- Delivery address, or whether you'll pick up\n- Any dietary needs (vegetarian, gluten-free, allergies, etc.)\n- Your taco preferences, such as proteins, sides, or drinks\n\nOnce I have these details, I'll confirm availability for Thursday and send over pricing.\n\nBest regards,\n[Your Name]\n[Business Name]"
+   }
+  ]
+ },
+ {
+  "tool_id": "sanebox",
+  "job": "email_triage",
+  "accuracy": 0.5,
+  "p50_latency_s": 1.7026665500015952,
+  "cost_per_resolved_usd": 0.0002882,
+  "n_tasks": 2,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:51:41.677408Z",
+  "failures": [
+   {
+    "task": "et1",
+    "reason": "The output does not classify the email as catering, nor does it draft a reply asking for details as required by the rubric.",
+    "output": "**Folder: Inbox (high priority)**\n\nReason: This is a genuine customer order request for lunch for 25 people next Thursday."
+   }
+  ]
+ },
+ {
+  "tool_id": "shortwave",
+  "job": "email_triage",
+  "accuracy": 1.0,
+  "p50_latency_s": 1.9526602500118315,
+  "cost_per_resolved_usd": 0.00017935000000000002,
+  "n_tasks": 2,
+  "model": "anthropic/claude-haiku-5.5",
+  "simulated": true,
+  "run_at": "2026-11-08T18:51:50.476780Z",
+  "failures": []
+ }
+]

@@ -1,0 +1,602 @@
+{
+  "_meta": {
+    "retrieved": "2026-11-08",
+    "method": "Each listing was built by hand from the vendor's own pricing page where it could be fetched, and from public review platforms (Trustpilot, Xero App Store). G2 and Capterra block automated access, so they are not used. Where only a secondary source had a price, the listing says so in price_evidence. Reviews are quoted verbatim (short excerpts) with author, date and link; we keep critical reviews and flag reviews that are not about this product.",
+    "units": "usage units: minutes | calls | unique_callers | conversations | invoices | users | locations | flat"
+  },
+  "tools": [
+    {
+      "id": "rosie",
+      "name": "Rosie",
+      "vendor": "Rosie (heyrosie.com)",
+      "kind": "product",
+      "jobs": ["missed_calls"],
+      "verticals": ["all"],
+      "summary": "AI phone agent that answers calls 24/7, takes messages, texts booking links and can transfer to you.",
+      "website": "https://heyrosie.com",
+      "pricing": {
+        "url": "https://heyrosie.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "minutes",
+        "plans": [
+          {"name": "Professional", "usd_month": 49, "included": 250, "overage": null, "notes": "2 message-taking scenarios, booking links by text, spam detection"},
+          {"name": "Scale", "usd_month": 149, "included": 1000, "overage": null, "notes": "calendar booking, warm and live transfers"},
+          {"name": "Growth", "usd_month": 299, "included": 2000, "overage": null, "notes": "unlimited scenarios, white-glove onboarding"}
+        ],
+        "trial": "7-day free trial",
+        "contract": "Cancel anytime (vendor page). Annual billing: 2 months free.",
+        "notes": "Overage rate is not published on the pricing page."
+      },
+      "requires_any": [],
+      "works_with": ["zapier"],
+      "capabilities": {"voice": true, "sms": true, "spanish": true, "human_handoff": true, "books_appointments": true},
+      "capability_notes": {"human_handoff": "Live transfers on Scale and Growth plans only", "spanish": "\"English & Spanish on every call\""},
+      "ratings": [
+        {"platform": "Trustpilot", "score": null, "count": 0, "url": "https://www.trustpilot.com/review/heyrosie.com", "note": "Profile exists, no reviews yet"}
+      ],
+      "reviews": [],
+      "engage": {"signup_url": "https://heyrosie.com/pricing", "cta": "Start 7-day free trial"},
+      "behavior": "You are Rosie, an AI phone agent for a small business. Answer politely, capture the caller's name, number and reason, offer to text a booking link, and transfer urgent issues to the owner. Never quote prices or promise times you were not given."
+    },
+    {
+      "id": "goodcall",
+      "name": "Goodcall",
+      "vendor": "Goodcall",
+      "kind": "product",
+      "jobs": ["missed_calls"],
+      "verticals": ["all"],
+      "summary": "AI voice agent that answers calls on your existing number (call forwarding) and connects to other tools.",
+      "website": "https://www.goodcall.com",
+      "pricing": {
+        "url": "https://www.goodcall.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "unique_callers",
+        "plans": [
+          {"name": "Starter", "usd_month": 79, "included": 100, "overage": 0.79, "notes": "~150 calls, 1 external tool"},
+          {"name": "Growth", "usd_month": 129, "included": 500, "overage": 0.26, "notes": "~750 calls, 5 external tools"},
+          {"name": "Scale", "usd_month": 299, "included": 2000, "overage": 0.15, "notes": "~3,000 calls"}
+        ],
+        "trial": "Free demo agent; pay only when you connect a number",
+        "contract": "Not stated on pricing page",
+        "notes": "Priced per unique customer, not per call."
+      },
+      "requires_any": [],
+      "works_with": ["zapier"],
+      "capabilities": {"voice": true, "sms": false, "spanish": null, "human_handoff": null, "books_appointments": null},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 2.5, "count": 5, "url": "https://www.trustpilot.com/review/goodcall.com", "note": "Only 5 reviews, all 1-star; at least one is about an unrelated prepaid calling-card service", "relevance": "low"}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/goodcall.com", "author": "Atlanta Turnkey Construction", "date": "2026-06-02", "stars": 1, "quote": "We canceled this service in October 2025, yet the company continued charging our card month after month.", "theme": "billing / cancellation", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/goodcall.com", "author": "redcongear", "date": "2026-06-19", "stars": 1, "quote": "Reached out multiple times over billing disputes never got a response", "theme": "support", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/goodcall.com", "author": "Dalia Anderson", "date": "2026-08-08", "stars": 1, "quote": "THEY DON'T JUST STEAL YOUR MONEY, THEY STEAL YOUR TIME AND ENERGY.", "theme": "unrelated product", "relevant": false, "relevance_note": "Review is about prepaid calling cards, not the AI receptionist. Excluded from our evidence score."}
+      ],
+      "engage": {"signup_url": "https://www.goodcall.com/pricing", "cta": "Build a free demo agent"},
+      "behavior": "You are an AI voice agent answering calls for a small business. Greet the caller, find out what they need, collect name and number, and say the owner will follow up. Never invent prices, availability or promises."
+    },
+    {
+      "id": "smith-ai",
+      "name": "Smith.ai AI Receptionist",
+      "vendor": "Smith.ai",
+      "kind": "product",
+      "jobs": ["missed_calls"],
+      "verticals": ["all"],
+      "summary": "AI receptionist priced per call, from a company that also sells human receptionist plans.",
+      "website": "https://smith.ai",
+      "pricing": {
+        "url": "https://smith.ai/pricing/ai-receptionist",
+        "evidence": "vendor_page",
+        "unit": "calls",
+        "plans": [
+          {"name": "Free", "usd_month": 0, "included": 25, "overage": 3.00, "notes": "25 real calls + 50 simulated calls per month"},
+          {"name": "Pro", "usd_month": 150, "included": 75, "overage": 2.50, "notes": "Higher Pro tiers (150/300 calls) exist; their prices were not shown"},
+          {"name": "Enterprise", "usd_month": 500, "included": 300, "overage": 2.17, "notes": "Unlimited custom integrations"}
+        ],
+        "trial": "Free plan (25 calls/month) acts as the trial",
+        "contract": "Month-to-month; 30 days' notice to cancel",
+        "notes": "Up to 10% of calls can be removed from the bill each cycle for spam."
+      },
+      "requires_any": [],
+      "works_with": ["zapier", "calendly", "clio"],
+      "capabilities": {"voice": true, "sms": null, "spanish": null, "human_handoff": null, "books_appointments": true},
+      "capability_notes": {"books_appointments": "AI scheduling (Calendly and more)"},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 4.2, "count": 376, "url": "https://www.trustpilot.com/review/smith.ai", "note": "Most reviews describe the human receptionist service, not the AI plan", "relevance": "low"}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/smith.ai", "author": "Dean Roberts", "date": "2026-09-02", "stars": 1, "quote": "They required a upfront payment at $2500 for a six month contract", "theme": "contract terms", "relevant": true, "relevance_note": "Plan not named; conflicts with month-to-month terms on the AI pricing page"},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/smith.ai", "author": "Brett", "date": "2026-11-04", "stars": 1, "quote": "I have now sent two detailed emails and spoken with your online chatbot, 'Fatima'", "theme": "support", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/smith.ai", "author": "Kathy C.", "date": "2026-09-22", "stars": 4, "quote": "many of the receptionists answering the calls simply don't understand what we do and do not handle.", "theme": "call quality", "relevant": false, "relevance_note": "About human receptionists (law firm), not the AI product"},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/smith.ai", "author": "Doug Newborn", "date": "2026-08-31", "stars": 5, "quote": "the ability to have a real human being answer my calls", "theme": "human service", "relevant": false, "relevance_note": "Praises human receptionists, not the AI product"}
+      ],
+      "engage": {"signup_url": "https://smith.ai/pricing/ai-receptionist", "cta": "Start on the Free plan"},
+      "behavior": "You are an AI receptionist for a small business. Answer professionally, qualify the caller, take a detailed message, and offer to book a time if asked. Do not give legal, medical or pricing advice you were not given."
+    },
+    {
+      "id": "my-ai-front-desk",
+      "name": "My AI Front Desk",
+      "vendor": "My AI Front Desk",
+      "kind": "product",
+      "jobs": ["missed_calls"],
+      "verticals": ["all"],
+      "summary": "AI receptionist bundle: voice, SMS, website chat and email drafts in one plan.",
+      "website": "https://www.myaifrontdesk.com",
+      "pricing": {
+        "url": "https://www.myaifrontdesk.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "minutes",
+        "plans": [
+          {"name": "Business-in-a-Box (monthly)", "usd_month": 99, "included": 200, "overage": 0.25, "notes": "$79/mo if billed annually; 400 SMS, 100 chatbot conversations"}
+        ],
+        "trial": "7-day free trial",
+        "contract": "Cancel anytime; no contracts (vendor page)",
+        "notes": "Extra voice minute = 25 credits ($0.25)."
+      },
+      "requires_any": [],
+      "works_with": ["zapier"],
+      "capabilities": {"voice": true, "sms": true, "spanish": true, "human_handoff": null, "books_appointments": null},
+      "capability_notes": {"spanish": "20+ languages"},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 3.3, "count": 16, "url": "https://www.trustpilot.com/review/myaifrontdesk.com", "note": "Small sample"}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/myaifrontdesk.com", "author": "Higari Teru", "date": "2026-04-19", "stars": 5, "quote": "It answers every call, day or night, so I never miss potential customers anymore.", "theme": "coverage", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/myaifrontdesk.com", "author": "Richard Vane", "date": "2026-04-21", "stars": 5, "quote": "Great service and very easy to set up.", "theme": "setup", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/myaifrontdesk.com", "author": "Terrell Thomas", "date": "2026-10-13", "stars": 2, "quote": "Literally couldn't even create an account without errors, failed password resets and 0 human customer support.", "theme": "onboarding / support", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/myaifrontdesk.com", "author": "Erik Knight", "date": "2026-08-20", "stars": 1, "quote": "This company fails to pay its partners after months and months about lying that payments are on the way.", "theme": "partner program", "relevant": false, "relevance_note": "About the reseller/partner program, not the product a business would buy"}
+      ],
+      "engage": {"signup_url": "https://www.myaifrontdesk.com/pricing", "cta": "Start 7-day free trial"},
+      "behavior": "You are an AI front desk for a small business. Answer the call, help with simple questions using only facts you were given, capture contact details and reason, and text a follow-up link. Never make up prices or appointment slots."
+    },
+    {
+      "id": "jobber-receptionist",
+      "name": "Jobber Receptionist",
+      "vendor": "Jobber",
+      "kind": "addon",
+      "jobs": ["missed_calls"],
+      "verticals": ["home_services"],
+      "summary": "Jobber's AI receptionist: answers calls and texts 24/7 and can book jobs straight into your Jobber calendar.",
+      "website": "https://www.getjobber.com",
+      "pricing": {
+        "url": "https://help.getjobber.com/en/articles/receptionistpowered-by-jobber-ai/",
+        "evidence": "vendor_help_center",
+        "unit": "conversations",
+        "plans": [
+          {"name": "Receptionist add-on", "usd_month": 29, "included": 30, "overage": 0.79, "notes": "Add-on to select Jobber plans; included with unlimited usage on Jobber Plus"}
+        ],
+        "trial": "Not stated",
+        "contract": "Follows your Jobber subscription",
+        "notes": "Some third-party pages still list $99/month; Jobber's help center says $29."
+      },
+      "requires_any": ["jobber"],
+      "works_with": ["jobber"],
+      "capabilities": {"voice": true, "sms": true, "spanish": null, "human_handoff": true, "books_appointments": true},
+      "capability_notes": {"human_handoff": "Escalation policy can transfer urgent calls to a team member"},
+      "ratings": [],
+      "reviews": [],
+      "evidence_gap": "No reviews specific to the Receptionist add-on were found on fetchable platforms.",
+      "engage": {"signup_url": "https://help.getjobber.com/en/articles/receptionistpowered-by-jobber-ai/", "cta": "Turn on in Jobber"},
+      "behavior": "You are the AI receptionist for a home-services company. Answer calls, collect the address and problem, offer to book a visit, and transfer emergencies (gas smell, no heat in winter, flooding) to the on-call technician. Never quote a repair price."
+    },
+    {
+      "id": "slang-ai",
+      "name": "Slang AI",
+      "vendor": "Slang.ai",
+      "kind": "product",
+      "jobs": ["missed_calls"],
+      "verticals": ["food"],
+      "summary": "Restaurant-specific AI phone host: reservations, hours, menu questions and private-event leads.",
+      "website": "https://www.slang.ai",
+      "pricing": {
+        "url": "https://www.slang.ai/pricing",
+        "evidence": "vendor_page",
+        "unit": "locations",
+        "plans": [
+          {"name": "Core", "usd_month": 399, "included": 1, "overage": null, "notes": "\"Starting at\" per location; bilingual; reservation integrations"},
+          {"name": "Premium", "usd_month": 599, "included": 1, "overage": null, "notes": "\"Starting at\" per location; 97 languages"}
+        ],
+        "trial": "Not stated; quote and demo",
+        "contract": "Not stated",
+        "notes": "Prices are 'starting at'; final price via quote. Vendor says setup takes under 30 minutes."
+      },
+      "requires_any": [],
+      "works_with": ["opentable", "resy", "sevenrooms", "yelp"],
+      "capabilities": {"voice": true, "sms": true, "spanish": true, "human_handoff": null, "books_appointments": true},
+      "capability_notes": {"books_appointments": "Reservations via OpenTable, Resy, SevenRooms, Yelp"},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 3.7, "count": 1, "url": "https://www.trustpilot.com/review/slang.ai", "note": "Single review from 2024"}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/slang.ai", "author": "Steve", "date": "2024-02-21", "stars": 5, "quote": "Great product, easy to use! Has been great for my restaurant and was very quick to implement.", "theme": "setup", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.slang.ai/pricing", "cta": "Get a quote / book a demo"},
+      "behavior": "You answer the phone for a restaurant. Handle reservations, hours and menu questions using only facts provided. Escalate allergies, complaints and large private events to a manager. Never promise a table you cannot confirm."
+    },
+    {
+      "id": "nicejob",
+      "name": "NiceJob Pro",
+      "vendor": "NiceJob",
+      "kind": "product",
+      "jobs": ["review_replies"],
+      "verticals": ["all"],
+      "summary": "Automated review requests by SMS/email; the Pro plan adds AI replies to every review in your brand voice.",
+      "website": "https://get.nicejob.com",
+      "pricing": {
+        "url": "https://get.nicejob.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "flat",
+        "plans": [
+          {"name": "Pro", "usd_month": 135, "included": null, "overage": null, "notes": "AI Replies, referrals, NPS. (Starter $95 has review requests but no AI replies.)"}
+        ],
+        "trial": "14-day free trial",
+        "contract": "No contracts; cancel anytime",
+        "notes": ""
+      },
+      "requires_any": ["google_business"],
+      "works_with": ["google_business"],
+      "capabilities": {"auto_post": true, "approval_mode": null, "review_requests": true},
+      "capability_notes": {},
+      "ratings": [],
+      "reviews": [],
+      "evidence_gap": "No fetchable public review profile found (Trustpilot pages for nicejob.com / getnicejob.com return 404).",
+      "engage": {"signup_url": "https://get.nicejob.com/pricing", "cta": "Start 14-day free trial"},
+      "behavior": "You reply to Google reviews for a local business in its brand voice. Thank positive reviewers specifically. For negative reviews, apologize, do not argue, invite them to contact the owner offline. Never offer refunds or discounts publicly."
+    },
+    {
+      "id": "birdeye",
+      "name": "Birdeye",
+      "vendor": "Birdeye",
+      "kind": "product",
+      "jobs": ["review_replies"],
+      "verticals": ["all"],
+      "summary": "Reputation platform with AI agents for reviews, listings, messaging and surveys.",
+      "website": "https://birdeye.com",
+      "pricing": {
+        "url": "https://birdeye.com/pricing/",
+        "evidence": "vendor_page",
+        "unit": "locations",
+        "plans": [],
+        "quote_only": true,
+        "trial": "Not stated",
+        "contract": "\"One platform, one contract\"; term not published. Reviewers describe annual subscriptions.",
+        "notes": "Pricing by quote, banded by location count."
+      },
+      "requires_any": ["google_business"],
+      "works_with": ["google_business"],
+      "capabilities": {"auto_post": true, "review_requests": true},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 3.1, "count": 685, "url": "https://www.trustpilot.com/review/birdeye.com", "note": ""}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/birdeye.com", "author": "Helen", "date": "2026-10-15", "stars": 5, "quote": "This platform makes my life so easy! I can read & reply to reviews right from the dashboard.", "theme": "ease of use", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/birdeye.com", "author": "Ryan Anderson", "date": "2026-10-08", "stars": 1, "quote": "I gave Birdeye a full 12 months to prove its value, and the experience has been incredibly disappointing.", "theme": "value / contract", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/birdeye.com", "author": "Jamie", "date": "2026-09-01", "stars": 1, "quote": "We originally signed up for a one-year Birdeye subscription for our practice and experienced issues from the start.", "theme": "contract", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://birdeye.com/pricing/", "cta": "Request pricing"},
+      "behavior": "You reply to online reviews for a local business. Be specific and warm with positive reviewers; for negative ones apologize, stay calm, and move the conversation offline. Never promise refunds."
+    },
+    {
+      "id": "podium",
+      "name": "Podium",
+      "vendor": "Podium",
+      "kind": "product",
+      "jobs": ["review_replies"],
+      "verticals": ["all"],
+      "summary": "Text-message platform for review collection and customer messaging, with an optional AI Employee add-on.",
+      "website": "https://www.podium.com",
+      "pricing": {
+        "url": "https://www.podium.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "flat",
+        "plans": [],
+        "quote_only": true,
+        "trial": "Demo only",
+        "contract": "Not published",
+        "notes": "AI Employee is a separately priced add-on."
+      },
+      "requires_any": ["google_business"],
+      "works_with": ["google_business"],
+      "capabilities": {"review_requests": true, "auto_post": null},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 4.0, "count": 367, "url": "https://www.trustpilot.com/review/podium.com", "note": ""}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/podium.com", "author": "Luke Lauer", "date": "2026-02-11", "stars": 5, "quote": "We've been happy with the messaging capabilities, features, and flexibility for both us and our customers.", "theme": "messaging", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/podium.com", "author": "Goran Grozic", "date": "2026-10-12", "stars": 1, "quote": "AI system sucks and disorganized and jumbles up today's customers with last week and month.", "theme": "AI quality", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/podium.com", "author": "Nicholas Gault", "date": "2026-08-25", "stars": 1, "quote": "Year 1 went great (customer service was a let down).", "theme": "support", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.podium.com/pricing", "cta": "Get a demo"},
+      "behavior": "You reply to reviews and customer texts for a local business. Keep replies short and friendly, never argue, and route complaints to the owner."
+    },
+    {
+      "id": "gbp-replies",
+      "name": "Google Business Profile (reply yourself)",
+      "vendor": "Google",
+      "kind": "builtin",
+      "jobs": ["review_replies"],
+      "verticals": ["all"],
+      "summary": "Free. Reply to Google reviews yourself from your Business Profile once the business is verified.",
+      "website": "https://support.google.com/business/answer/3474050",
+      "pricing": {
+        "url": "https://support.google.com/business/answer/3474050",
+        "evidence": "vendor_help_center",
+        "unit": "flat",
+        "plans": [{"name": "Free", "usd_month": 0, "included": null, "overage": null, "notes": "Requires a verified profile; replies are checked against Google's content policy"}],
+        "trial": "Free",
+        "contract": "None",
+        "notes": "No automatic replies: the owner spends the time."
+      },
+      "requires_any": ["google_business"],
+      "works_with": ["google_business"],
+      "capabilities": {"auto_post": false},
+      "capability_notes": {},
+      "ratings": [],
+      "reviews": [],
+      "engage": {"signup_url": "https://support.google.com/business/answer/3474050", "cta": "How to reply (Google help)"},
+      "behavior": "",
+      "baseline_saves_time": false
+    },
+    {
+      "id": "paidnice",
+      "name": "Paidnice",
+      "vendor": "Paidnice",
+      "kind": "product",
+      "jobs": ["invoice_chasing"],
+      "verticals": ["all"],
+      "summary": "Automated reminders, late fees and early-payment discounts on Xero and QuickBooks Online invoices.",
+      "website": "https://www.paidnice.com",
+      "pricing": {
+        "url": "https://www.paidnice.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "invoices",
+        "plans": [
+          {"name": "Essentials", "usd_month": 69, "included": 150, "overage": null, "notes": "600 emails, up to 2 team members"},
+          {"name": "Pro 300", "usd_month": 99, "included": 300, "overage": null, "notes": "Unlimited team members"},
+          {"name": "Pro 600", "usd_month": 179, "included": 600, "overage": null, "notes": ""},
+          {"name": "Pro 1,000", "usd_month": 279, "included": 1000, "overage": null, "notes": ""}
+        ],
+        "trial": "First 20 actions free, no card, no time limit",
+        "contract": "Not stated",
+        "notes": "Pricing page does not describe AI features; this is rules-based automation."
+      },
+      "requires_any": ["quickbooks", "xero"],
+      "works_with": ["quickbooks", "xero", "stripe"],
+      "capabilities": {"sms": true, "late_fees": true, "ai": false},
+      "capability_notes": {"ai": "Automation, not generative AI, per its own pricing page"},
+      "ratings": [
+        {"platform": "Xero App Store", "score": 5.0, "count": 85, "url": "https://apps.xero.com/us/app/paidnice/reviews", "note": "100% 5-star: marketplace ratings skew positive"}
+      ],
+      "reviews": [
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/paidnice/reviews", "author": "Dan Crossman", "date": null, "stars": 5, "quote": "the features, such as early-payment discounts and late-payment charges, have really helped improve our cashflow.", "theme": "cash flow", "relevant": true},
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/paidnice/reviews", "author": "William Fock", "date": null, "stars": 5, "quote": "It has helped us to save many man hours to automate sending statement and calculate late interests.", "theme": "time saved", "relevant": true},
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/paidnice/reviews", "author": "Azhar Saley", "date": null, "stars": 5, "quote": "Setup was straightforward, and once it was running it took the manual follow-up off our plate.", "theme": "setup", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.paidnice.com/pricing", "cta": "Try free (20 actions)"},
+      "behavior": "You write payment reminder emails for overdue invoices. Be polite and specific (amount, invoice number, days late). Escalate tone gradually. Never threaten legal action."
+    },
+    {
+      "id": "chaser",
+      "name": "Chaser",
+      "vendor": "Chaser",
+      "kind": "product",
+      "jobs": ["invoice_chasing"],
+      "verticals": ["all"],
+      "summary": "Accounts-receivable automation: email, SMS and automated-call reminders, payment portal, 20+ accounting integrations.",
+      "website": "https://www.chaserhq.com",
+      "pricing": {
+        "url": "https://www.softwareadvice.com/debt-collection/chaser-profile",
+        "evidence": "secondary_source",
+        "unit": "flat",
+        "plans": [
+          {"name": "Compact", "usd_month": 259, "included": null, "overage": null, "notes": "US starting price as listed by Software Advice and other directories"}
+        ],
+        "trial": "Not verified",
+        "contract": "Not verified",
+        "notes": "Vendor pricing page could not be fetched. UK pricing is tiered by annual revenue (£199-£899/mo)."
+      },
+      "requires_any": ["quickbooks", "xero"],
+      "works_with": ["quickbooks", "xero", "sage"],
+      "capabilities": {"sms": true, "late_fees": null, "ai": true},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Xero App Store", "score": 5.0, "count": 374, "url": "https://apps.xero.com/us/app/chaser/reviews", "note": "98% 5-star: marketplace ratings skew positive"}
+      ],
+      "reviews": [
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/chaser/reviews", "author": "Alex Irving", "date": null, "stars": 5, "quote": "There is a powerful scheduling feature that's worth paying for", "theme": "scheduling", "relevant": true},
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/chaser/reviews", "author": "Jennifer Lee", "date": null, "stars": 5, "quote": "This is precisely what we required for handling our debt!", "theme": "collections", "relevant": true},
+        {"platform": "Xero App Store", "url": "https://apps.xero.com/us/app/chaser/reviews", "author": "Stella Gonzalez", "date": null, "stars": 4, "quote": "A very useful tool and the team are very helpful.", "theme": "support", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.chaserhq.com", "cta": "Visit Chaser"},
+      "behavior": "You write accounts-receivable reminders. Be courteous and precise (invoice number, amount, due date), include a payment link, and escalate politely. Never threaten."
+    },
+    {
+      "id": "qbo-reminders",
+      "name": "QuickBooks Online automatic reminders",
+      "vendor": "Intuit",
+      "kind": "builtin",
+      "jobs": ["invoice_chasing"],
+      "verticals": ["all"],
+      "summary": "Already in QuickBooks Online: up to three scheduled reminder emails, before or after the due date.",
+      "website": "https://quickbooks.intuit.com/learn-support/en-us/help-article/invoicing/send-invoice-reminders-automatically-manually/L84cQjpxo_US_en_US",
+      "pricing": {
+        "url": "https://quickbooks.intuit.com/learn-support/en-us/help-article/invoicing/send-invoice-reminders-automatically-manually/L84cQjpxo_US_en_US",
+        "evidence": "vendor_help_center",
+        "unit": "flat",
+        "plans": [{"name": "Included", "usd_month": 0, "included": null, "overage": null, "notes": "Settings > Account and settings > Sales > Reminders"}],
+        "trial": "Included with QuickBooks Online",
+        "contract": "None",
+        "notes": "Only for invoices already emailed from QuickBooks; one schedule for all customers."
+      },
+      "requires_any": ["quickbooks"],
+      "works_with": ["quickbooks"],
+      "capabilities": {"sms": false, "late_fees": false, "ai": false},
+      "capability_notes": {},
+      "ratings": [],
+      "reviews": [],
+      "engage": {"signup_url": "https://quickbooks.intuit.com/learn-support/en-us/help-article/invoicing/send-invoice-reminders-automatically-manually/L84cQjpxo_US_en_US", "cta": "Turn on (Intuit help)"},
+      "behavior": "",
+      "baseline_saves_time": true
+    },
+    {
+      "id": "xero-reminders",
+      "name": "Xero invoice reminders",
+      "vendor": "Xero",
+      "kind": "builtin",
+      "jobs": ["invoice_chasing"],
+      "verticals": ["all"],
+      "summary": "Already in Xero: automatic reminders before the due date, on it, and after.",
+      "website": "https://www.xero.com/us/guides/invoice-payment-times/",
+      "pricing": {
+        "url": "https://www.xero.com/us/accounting-software/send-invoices/",
+        "evidence": "vendor_page",
+        "unit": "flat",
+        "plans": [{"name": "Included", "usd_month": 0, "included": null, "overage": null, "notes": ""}],
+        "trial": "Included with Xero",
+        "contract": "None",
+        "notes": ""
+      },
+      "requires_any": ["xero"],
+      "works_with": ["xero"],
+      "capabilities": {"sms": false, "late_fees": false, "ai": false},
+      "capability_notes": {},
+      "ratings": [],
+      "reviews": [],
+      "engage": {"signup_url": "https://www.xero.com/us/guides/invoice-payment-times/", "cta": "How to set up (Xero)"},
+      "behavior": "",
+      "baseline_saves_time": true
+    },
+    {
+      "id": "fyxer",
+      "name": "Fyxer AI",
+      "vendor": "Fyxer",
+      "kind": "product",
+      "jobs": ["email_triage"],
+      "verticals": ["all"],
+      "summary": "Sorts your inbox and drafts replies in your tone, in Gmail or Outlook.",
+      "website": "https://www.fyxer.com",
+      "pricing": {
+        "url": "https://www.fyxer.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "users",
+        "plans": [
+          {"name": "Pro", "usd_month": 49, "included": 1, "overage": 49, "notes": "Per person; $37/person if billed annually. Reply drafts + inbox sorting"}
+        ],
+        "trial": "14-day trial of the Team plan, then drops to the Free plan (no drafting)",
+        "contract": "Monthly or annual",
+        "notes": "Free plan exists but does not draft replies or sort the inbox."
+      },
+      "requires_any": ["gmail", "outlook"],
+      "works_with": ["gmail", "outlook", "slack", "teams"],
+      "capabilities": {"drafts_replies": true, "sorts_inbox": true},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 4.0, "count": 760, "url": "https://www.trustpilot.com/review/fyxer.com", "note": ""}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/fyxer.com", "author": "Steve Young", "date": "2026-04-06", "stars": 5, "quote": "It's been such a time saver in my tax practice. I highly recommend!", "theme": "time saved", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/fyxer.com", "author": "Vern Schellenger", "date": "2026-11-02", "stars": 1, "quote": "Several of the drafts send for replies were very poorly written.", "theme": "draft quality", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/fyxer.com", "author": "Johanna Berry", "date": "2026-10-21", "stars": 1, "quote": "DO NOT TRUST - The company make it impossible for you to leave or opt out of.", "theme": "cancellation", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/fyxer.com", "author": "Andrew Parker", "date": "2026-10-28", "stars": 5, "quote": "Having them prescreened, organised and with draft replies made a huge positive impact to my time management.", "theme": "time saved", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.fyxer.com/pricing", "cta": "Start 14-day trial"},
+      "behavior": "You triage a small business inbox into: customer request, quote/booking, vendor, billing, spam. Draft a short reply only for customer requests and quote/booking emails, in a friendly professional tone. Never commit to prices or dates not given."
+    },
+    {
+      "id": "sanebox",
+      "name": "SaneBox",
+      "vendor": "SaneBox",
+      "kind": "product",
+      "jobs": ["email_triage"],
+      "verticals": ["all"],
+      "summary": "Filters unimportant email into folders so your inbox shows what matters. Sorting only, no reply drafts.",
+      "website": "https://www.sanebox.com",
+      "pricing": {
+        "url": "https://toolradar.com/tools/sanebox/pricing",
+        "evidence": "secondary_source",
+        "unit": "users",
+        "plans": [
+          {"name": "Lunch", "usd_month": 7.46, "included": 2, "overage": null, "notes": "2 email accounts. Toolradar says confirmed against sanebox.com on 2026-11-08; other sources list ~$12/mo monthly billing"}
+        ],
+        "trial": "Free trial (14 days per secondary sources)",
+        "contract": "Monthly, annual or 2-year",
+        "notes": "Sources disagree; prices changed several times in 2026."
+      },
+      "requires_any": ["gmail", "outlook"],
+      "works_with": ["gmail", "outlook"],
+      "capabilities": {"drafts_replies": false, "sorts_inbox": true},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": 4.8, "count": 761, "url": "https://www.trustpilot.com/review/sanebox.com", "note": ""}
+      ],
+      "reviews": [
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/sanebox.com", "author": "Kate", "date": "2026-07-31", "stars": 5, "quote": "I provide fractional services and end up with a new inbox with every client.", "theme": "multi-inbox", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/sanebox.com", "author": "Omari Allen", "date": "2026-08-11", "stars": 4, "quote": "My only real complaint is that the interface could use an update.", "theme": "interface", "relevant": true},
+        {"platform": "Trustpilot", "url": "https://www.trustpilot.com/review/sanebox.com", "author": "Rich Nichols", "date": "2026-09-11", "stars": 2, "quote": "The company offers no telephone customer support, unless you buy the premium level!!", "theme": "support", "relevant": true}
+      ],
+      "engage": {"signup_url": "https://www.sanebox.com", "cta": "Start free trial"},
+      "behavior": "You sort a small business inbox. Put important customer emails in the inbox and move newsletters, vendor promos and spam to a later folder. You do not write replies."
+    },
+    {
+      "id": "shortwave",
+      "name": "Shortwave",
+      "vendor": "Shortwave",
+      "kind": "product",
+      "jobs": ["email_triage"],
+      "verticals": ["all"],
+      "summary": "AI-first email client: AI filters, search across threads, summaries and writing help.",
+      "website": "https://www.shortwave.com",
+      "pricing": {
+        "url": "https://www.shortwave.com/pricing/",
+        "evidence": "vendor_page",
+        "unit": "users",
+        "plans": [
+          {"name": "Business", "usd_month": 30, "included": 1, "overage": 30, "notes": "Per seat, monthly; 3 AI-powered filters"}
+        ],
+        "trial": "14-day free trial",
+        "contract": "Monthly",
+        "notes": "Pricing page does not list supported providers; Shortwave is built on Gmail/Google Workspace."
+      },
+      "requires_any": ["gmail"],
+      "works_with": ["gmail"],
+      "capabilities": {"drafts_replies": true, "sorts_inbox": true},
+      "capability_notes": {},
+      "ratings": [
+        {"platform": "Trustpilot", "score": null, "count": 0, "url": "https://www.trustpilot.com/review/shortwave.com", "note": "No reviews yet"}
+      ],
+      "reviews": [],
+      "engage": {"signup_url": "https://www.shortwave.com/pricing/", "cta": "Start 14-day trial"},
+      "behavior": "You are an AI email assistant. Summarize each email in one line, flag the ones that need the owner, and draft a short reply when asked. Never commit to prices or dates not given."
+    },
+    {
+      "id": "gemini-gmail",
+      "name": "Gemini in Gmail (Google Workspace)",
+      "vendor": "Google",
+      "kind": "builtin",
+      "jobs": ["email_triage"],
+      "verticals": ["all"],
+      "summary": "Already included in every Google Workspace business plan: summarize threads and draft emails with Gemini.",
+      "website": "https://workspace.google.com/pricing",
+      "pricing": {
+        "url": "https://workspace.google.com/pricing",
+        "evidence": "vendor_page",
+        "unit": "flat",
+        "plans": [{"name": "Included in Workspace", "usd_month": 0, "included": null, "overage": null, "notes": "Business Starter is $7/user/mo list; Gemini in Gmail is included on Starter, Standard and Plus"}],
+        "trial": "Included",
+        "contract": "Your Workspace plan",
+        "notes": "Writing and summaries; does not automatically sort the inbox the way Fyxer or SaneBox do."
+      },
+      "requires_any": ["google_workspace"],
+      "works_with": ["gmail", "google_workspace"],
+      "capabilities": {"drafts_replies": true, "sorts_inbox": false},
+      "capability_notes": {},
+      "ratings": [],
+      "reviews": [],
+      "engage": {"signup_url": "https://workspace.google.com/pricing", "cta": "Open Gmail and use Gemini"},
+      "behavior": "",
+      "baseline_saves_time": true
+    }
+  ]
+}

@@ -46,7 +46,7 @@ def published_accuracy(outcomes: list[Outcome]) -> list[dict]:
         cal = calibrate(job, rows)
         report.append({
             "job": job.value,
-            "verified_hires": len(rows),
+            "reported_outcomes": len(rows),
             "mape": round(sum(ape) / len(ape), 3) if ape else None,
             "mape_first_half": round(sum(ape[:half]) / half, 3) if half else None,
             "mape_second_half": round(sum(ape[half:]) / (len(ape) - half), 3) if len(ape) - half and half else None,

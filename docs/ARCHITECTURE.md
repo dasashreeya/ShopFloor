@@ -1,34 +1,40 @@
-# Architecture and extension points
+# Architecture
 
-## Seams (swap the stub, keep everything else)
+```
+web/ (PWA, vanilla JS)  ──HTTP──▶  shopfloor/api/app.py (FastAPI, per-IP limits on AI endpoints)
+                                          │
+                                   shopfloor/service.py
+          ┌──────────────┬───────────────┼────────────────┬────────────────┐
+   catalog/ (data)   engine/ (pure)   discovery.py      lab/ (LLM)      outcomes/
+   tools.json        intake.py        URL → candidate   scenario tests   check-ins +
+   research.json     estimators.py    (LLM extraction)  (simulated)      calibration
+                     pricing.py
+                     recommend.py
+                                          │
+                                 store.py (SQLite doc store: businesses, picks, outcomes, candidates, lab)
+```
 
-| Seam | Protocol | Stub today | Real implementation |
-|---|---|---|---|
-| Data in | `connectors.base.Connector.fetch(since, until) -> list[Event]` | `connectors/synthetic.py` | Square Orders API, Toast Orders, QuickBooks Invoices, Gmail, Twilio call logs, GBP reviews |
-| Discovery | `discovery.crawler.MarketplaceSource.listings()` | `SeedFileSource` | Scrapers for Square App Marketplace, Toast Partner Connect, QuickBooks App Store |
-| Lab | `lab.runner.ToolAdapter.attempt(input) -> LLMResult` | `SimulatedToolAdapter` (OpenRouter) | Vendor sandbox / API adapters |
-| Outcomes | `outcomes.measure.Attribution.actual_monthly_usd(hire, pred)` | `SimulatedAttribution` | Join tool action logs to POS/accounting records |
-| LLM | `llm.base.LLM.chat(...)` | `FakeLLM` | `OpenRouterClient` |
-| Storage | `store.Store` | SQLite JSON docs | Postgres (same collections) |
+## Principles
 
-## Adding a new job (e.g. "no-show reminders")
+1. **Deterministic money.** `engine/` is pure Python. No LLM output ever enters a price, value or score.
+2. **Catalog is data.** Adding a tool means adding JSON with sources; no code change. Built-in features of software owners already have are first-class entries (`kind: builtin`).
+3. **Every number has an origin.** Estimators return `inputs[]` tagged owner / file / default, with grade and sources; the UI shows them.
+4. **"No" is an answer.** `recommend_job` can return `use_builtin`, `no_purchase` (with break-even) or `needs_info`.
+5. **Tenant isolation.** Every pick/outcome route checks the business id in the path owns the record.
 
-1. Add a `Job` enum value in `models.py`.
-2. Write an estimator in `replay/estimators.py` that returns an `Estimate` with named assumptions and `facts`.
-3. Add a card template in `deck/cards.py` and the event kinds in `hiring/lifecycle.JOB_EVENTS`.
-4. Add `lab/golden_sets/<job>.json`. Include at least one `MUST_DECLINE` safety task.
+## Extension seams
 
-## Calibration math
+| Seam | Today | Next |
+|---|---|---|
+| `discovery.extract(url)` | Paste a URL → unverified candidate | Scheduled marketplace crawls + change detection → verification queue |
+| `engine/intake.PARSERS` | CSV call logs, invoice lists, POS exports | OAuth connectors (QuickBooks, Square, Google Business Profile, Gmail) emitting the same metrics |
+| `lab/runner.ToolAdapter` | `SimulatedToolAdapter` (documented behavior on an LLM) | Real vendor adapters against sandbox accounts |
+| `outcomes/checkin.actual_value` | Owner self-report | Attribution from connector data (answered call → order within 48h) |
+| `store.Store` | SQLite JSON docs | Postgres with indexed tenant queries; versioned catalog snapshots |
 
-For job *j*, each verified hire gives `r = actual / raw_prediction`. Model `log r ~ N(mu_j, SIGMA^2)` with
-`mu_j ~ N(0, TAU^2)`. The posterior mean gives the multiplicative correction `exp(mu_j)`, and the posterior sd widens
-the shown interval. With `TAU=0.5, SIGMA=0.4` the first business gets a wide interval, and after ~50 verified hires the
-bias is pinned to within a few percent. Learn on the *raw* prediction, never the calibrated one, or the loop only
-sees residual bias and drifts back toward 1.
+## Scaling notes
 
-## Roadmap
-
-- Real connectors (Square + Twilio first: they cover the missed-call wedge).
-- A per-tool calibration level on top of per-job (hierarchical: tool within job).
-- Crews: shared event bus + handoffs between tools (e.g. missed-call texter -> catering inbox).
-- Outcome-based pricing once published accuracy is trusted.
+The recommender is O(tools × jobs) per request (~18 × 4 today; fine to thousands). The stack optimizer is exhaustive over
+each job's paying options (≤ ~7^4 combinations); beyond ~8 jobs, switch to a knapsack DP. Crawls, imports and lab runs
+should move to a background queue. The store's collection scans are the first bottleneck; Postgres with
+`(business_id)` indexes fixes it.

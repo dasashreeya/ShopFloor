@@ -39,17 +39,21 @@ def _judge(user: str) -> dict:
 
 
 def _extract(user: str) -> dict:
-    return {"job": "other", "pricing_usd_month": 0, "integrations": [], "summary": user[:120]}
+    url = user.splitlines()[0].removeprefix("URL: ").strip() if user else ""
+    host = url.split("/")[2] if "//" in url else "example"
+    return {"name": f"{host} (offline extraction)", "vendor": host, "is_ai_tool_for_small_business": True,
+            "job": "missed_calls", "summary": "Offline mode: set OPENROUTER_API_KEY for a real extraction.",
+            "plans": [], "quote_only": True, "trial": "", "integrations": []}
 
 
-def _card_copy(user: str) -> dict:
-    return {"headline": ""}  # empty -> caller keeps its template
+def _try(user: str) -> dict:
+    return {"text": "(offline demo reply) Thank you for taking the time to share this. We'd like to make it right; "
+                    "please call or email us so the owner can follow up personally."}
 
 
 _ANSWERS = {
     "tool-attempt": _tool_attempt,
     "lab-judge": _judge,
     "extract-listing": _extract,
-    "card-copy": _card_copy,
-    "shadow-draft": lambda u: {"text": f"(offline draft) would respond to {u[:80]}"},
+    "try-tool": _try,
 }

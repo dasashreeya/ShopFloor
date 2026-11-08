@@ -1,0 +1,14 @@
+# One-click deploy on Render (render.com > New > Blueprint > this repo).
+services:
+  - type: web
+    name: shopfloor
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false          # set in the dashboard; leave empty to run fully offline (FakeLLM)
+      - key: SHOPFLOOR_LLM_MODE
+        value: auto
+      - key: SHOPFLOOR_LLM_PER_HOUR
+        value: "20"          # per-IP cap on AI endpoints (try-it, discover, lab)

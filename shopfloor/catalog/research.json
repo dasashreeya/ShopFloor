@@ -1,0 +1,118 @@
+{
+  "retrieved": "2026-11-08",
+  "assumptions": {
+    "missed_call_share": {
+      "label": "Share of calls nobody answers live",
+      "low": 0.28, "mid": 0.40, "high": 0.62,
+      "used_when": "Owner does not know their missed-call rate",
+      "sources": [
+        {"title": "411 Locals study, via usecarly.com summary: 85 businesses, 58 industries, 30 days; 37.8% answered live", "url": "https://www.usecarly.com/blog/missed-call-statistics/", "note": "Often cited; original publication year unclear (2016)."},
+        {"title": "CallRail platform average: 28% of business calls unanswered (via getaira.io)", "url": "https://getaira.io/blog/missed-business-calls-statistics", "note": "Vendor platform data; sample not disclosed."}
+      ],
+      "grade": "secondary"
+    },
+    "callback_conversion": {
+      "label": "Missed callers an AI answer turns into a booking/order",
+      "low": 0.10, "mid": 0.20, "high": 0.30,
+      "used_when": "Always (no published, independent estimate found)",
+      "sources": [],
+      "grade": "assumption",
+      "note": "ShopFloor assumption. This is exactly the number owner check-ins calibrate. The widely repeated '85% of callers never call back' traces to an uncited vendor blog, so we do not use it."
+    },
+    "minutes_per_call": {
+      "label": "Average AI-answered call length (minutes)",
+      "low": 2, "mid": 3, "high": 4,
+      "used_when": "To pick the right minute-based plan",
+      "sources": [], "grade": "assumption"
+    },
+    "avg_ticket_home_services": {
+      "label": "Typical HVAC repair ticket",
+      "mid": 350,
+      "used_when": "HVAC/plumbing owner leaves average job value blank",
+      "sources": [{"title": "Angi: HVAC repairs typically about $350 (range $100-$2,000+)", "url": "https://www.angi.com/articles/how-much-hvac-repair-cost.htm"}],
+      "grade": "published"
+    },
+    "gross_margin": {
+      "label": "Share of a new sale you keep after direct costs",
+      "by_group": {"food": 0.68, "home_services": 0.50, "appointments": 0.60, "retail": 0.40, "other": 0.50},
+      "used_when": "Owner leaves margin blank",
+      "sources": [
+        {"title": "Restaurants: food cost typically 28-35% of sales (Square)", "url": "https://squareup.com/us/en/townsquare/food-cost-percentage"},
+        {"title": "HVAC service/repair gross margin commonly 50-60% (ACHR News)", "url": "https://www.achrnews.com/articles/91121-analyzing-your-variable-costs"}
+      ],
+      "grade": "secondary",
+      "note": "Appointments/retail defaults are ShopFloor assumptions."
+    },
+    "rating_lift_from_replies": {
+      "label": "Star-rating gain when a business replies to reviews",
+      "low": 0.0, "mid": 0.12, "high": 0.12,
+      "sources": [{"title": "Proserpio & Zervas (2017), Marketing Science 36(5): responding hotels gained 0.12 stars and 12% more reviews", "url": "https://www.informs.org/News-Room/INFORMS-Releases/News-Releases/Want-to-improve-your-business-s-online-ratings-Make-sure-to-respond-to-reviews"}],
+      "grade": "peer_reviewed",
+      "note": "Hotels on TripAdvisor; extrapolated to other local businesses."
+    },
+    "revenue_per_star": {
+      "label": "Revenue change per +1 star",
+      "low": 0.0, "mid": 0.05, "high": 0.09,
+      "sources": [{"title": "Luca (2016), HBS working paper 12-016: +1 Yelp star = 5-9% revenue for independent restaurants", "url": "https://econpapers.repec.org/RePEc:hbs:wpaper:12-016"}],
+      "grade": "peer_reviewed",
+      "note": "Independent restaurants in Seattle; we use the low end (5%) as mid and 0 as the low case outside restaurants."
+    },
+    "minutes_per_review_reply": {
+      "label": "Owner minutes to write one review reply", "low": 3, "mid": 5, "high": 8,
+      "sources": [], "grade": "assumption"
+    },
+    "minutes_per_late_invoice": {
+      "label": "Owner minutes spent chasing one late invoice (all follow-ups)", "low": 10, "mid": 20, "high": 30,
+      "sources": [{"title": "Xero: automatic reminders save small businesses ~3 hours a week (vendor claim, via search summary)", "url": "https://www.xero.com/us/guides/invoice-payment-times/"}],
+      "grade": "assumption"
+    },
+    "days_faster_with_reminders": {
+      "label": "Days sooner a late invoice gets paid with reminders", "low": 2, "mid": 4, "high": 8,
+      "sources": [
+        {"title": "Xero data via NZ business.govt.nz: overdue invoices with reminders paid ~4 days sooner", "url": "https://business.govt.nz/news/invoicing-tips-for-prompt-payments"},
+        {"title": "Hackett Group (via Xero): automated reminders, 8.4 days sooner", "url": "https://www.xero.com/us/guides/invoice-payment-times/"}
+      ],
+      "grade": "secondary"
+    },
+    "cost_of_cash": {
+      "label": "Annual cost of waiting for cash (e.g. credit line/credit card APR)", "low": 0.08, "mid": 0.15, "high": 0.22,
+      "sources": [], "grade": "assumption"
+    },
+    "email_time_saved_share": {
+      "label": "Share of email time an AI inbox assistant saves", "low": 0.10, "mid": 0.20, "high": 0.30,
+      "sources": [{"title": "Fyxer user review: 'huge positive impact to my time management' (anecdote, not a measurement)", "url": "https://www.trustpilot.com/review/fyxer.com"}],
+      "grade": "assumption"
+    },
+    "builtin_incremental_share": {
+      "label": "Extra value a paid tool adds on top of a free built-in you already have", "low": 0.10, "mid": 0.25, "high": 0.40,
+      "sources": [], "grade": "assumption",
+      "note": "Applies when the owner has QuickBooks/Xero reminders or Gemini in Gmail available."
+    }
+  },
+  "industry_groups": {
+    "restaurant": "food", "cafe": "food", "food_truck": "food",
+    "hvac": "home_services", "plumbing": "home_services", "landscaping": "home_services", "cleaning": "home_services", "electrical": "home_services",
+    "salon": "appointments", "fitness": "appointments", "auto_repair": "appointments",
+    "retail": "retail", "other": "other"
+  },
+  "context": [
+    {"claim": "Implementation knowledge, cost and staff capacity are the main barriers to small-business AI adoption; owners also worry about accuracy.", "source": "Federal Reserve Bank of San Francisco, analysis of the 2024 Small Business Credit Survey (July 2026)", "url": "https://www.frbsf.org/research-and-insights/publications/community-development-research-briefs/2026/07/ai-adoption-in-small-businesses-2024-sbcs/", "design_decision": "Show total monthly cost for your volume, trial and cancellation terms, and setup steps on every recommendation."},
+    {"claim": "66% of surveyed small businesses use AI; 41% use six or more technology platforms.", "source": "U.S. Chamber of Commerce, Empowering Small Business report (Oct 2026)", "url": "https://www.uschamber.com/technology/2026-empowering-small-business-report", "design_decision": "Start from the software the owner already pays for, and recommend the free built-in feature first when it exists."},
+    {"claim": "SBA advises starting with small trials and measuring value before scaling AI.", "source": "U.S. Small Business Administration, AI for small business guide", "url": "https://legacy.sba.gov/business-guide/manage-your-business/ai-small-business", "design_decision": "Every recommendation starts as a trial with a 30-day check-in that records what actually happened."},
+    {"claim": "59% of small businesses have invoices overdue 30+ days; average unpaid balance $17.7K.", "source": "QuickBooks Small Business Late Payments Report 2026", "url": "https://quickbooks.intuit.com/r/small-business-data/small-business-late-payments-report-2026/", "design_decision": "Invoice chasing is a first-class job, especially for trades."},
+    {"claim": "Angi pairs discovery with verified reviews and a path to hire a pro.", "source": "Angi reviews FAQ", "url": "https://intercom.help/angi/en/articles/11390652-reviews-frequently-asked-questions", "design_decision": "Each tool page shows price, ratings by platform, verbatim reviews (good and bad) and a direct sign-up link. Unlike Angi, the score is personalized to your numbers and stack."}
+  ],
+  "review_findings": [
+    "The same tool can look very different across platforms: Chaser and Paidnice are 5.0 on the Xero App Store, while Birdeye (3.1) and Podium (4.0) on Trustpilot show far more spread. Vendor marketplaces skew positive, so ShopFloor never averages ratings across platforms without showing each one and its sample size.",
+    "Platform ratings are often not about the product being sold: most Smith.ai Trustpilot reviews describe human receptionists, and some Goodcall reviews concern an unrelated calling-card service. We flag these and exclude them from the evidence score.",
+    "Cancellation and contract terms are the most common complaint theme (Goodcall, Fyxer, Birdeye, Smith.ai), which is why every ShopFloor card shows the vendor's stated contract terms and the exit steps before you start.",
+    "Several real products have little or no independent review evidence (Rosie, Shortwave, Jobber Receptionist, NiceJob). ShopFloor shows 'thin evidence' instead of inventing a rating."
+  ],
+  "sba_resources": [
+    {"name": "Find local SBA help (SBDCs, SCORE, Women's Business Centers, VBOCs)", "url": "https://www.sba.gov/local-assistance/find", "why": "Free one-on-one advising; bring your ShopFloor shortlist."},
+    {"name": "America's SBDC locator", "url": "https://americassbdc.org/find-your-sbdc/", "why": "Small Business Development Centers offer free technology and financial consulting."},
+    {"name": "SCORE free mentoring", "url": "https://www.score.org/find-mentor", "why": "Volunteer mentors, many with operations and software experience."},
+    {"name": "SBA Learning Platform", "url": "https://www.sba.gov/sba-learning-platform", "why": "Free courses on running and growing a business."},
+    {"name": "SBA guide: AI for small business", "url": "https://legacy.sba.gov/business-guide/manage-your-business/ai-small-business", "why": "SBA's own advice on adopting AI safely."}
+  ]
+}
