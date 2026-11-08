@@ -55,19 +55,40 @@ const EVIDENCE = { vendor_page: "Vendor pricing page", vendor_help_center: "Vend
 const ORIGIN = (o) => o === "owner" ? ["Your number", "bg-navy text-white"] : o?.startsWith("file") ? [o.replace("file: ", "From "), "bg-navy text-white"]
   : ["Default", "bg-amber-100 text-amber-900"];
 const GRADE = { owner: "", published: "Published source", peer_reviewed: "Peer-reviewed", secondary: "Secondary source", assumption: "ShopFloor assumption" };
-const EXAMPLES = {
-  pizza: { label: "Pizzeria (example numbers)", data: { name: "Example: Luigi's Pizzeria", industry: "restaurant", stack: ["square", "google_business", "gmail", "quickbooks"],
-    budget_usd_month: 150, pains: ["missed_calls", "review_replies"], needs: {},
-    metrics: { calls_per_week: 180, missed_share: 0.25, avg_ticket: 32, reviews_per_month: 25, reply_share: 0.1, monthly_revenue: 60000,
-               invoices_per_month: 6, avg_invoice: 450, email_hours_per_week: 4, owner_hourly_value: 30 } } },
-  hvac: { label: "HVAC shop (example numbers)", data: { name: "Example: Comfort Air HVAC", industry: "hvac", stack: ["jobber", "quickbooks", "google_business", "google_workspace", "gmail"],
-    budget_usd_month: 300, pains: ["missed_calls", "invoice_chasing"], needs: { human_handoff: true },
-    metrics: { calls_per_week: 60, avg_ticket: 350, reviews_per_month: 8, invoices_per_month: 70, avg_invoice: 620, late_share: 0.35,
-               email_hours_per_week: 6, owner_hourly_value: 45, uses_builtin_reminders: false } } },
-  salon: { label: "Salon (example numbers)", data: { name: "Example: Bloom Hair Studio", industry: "salon", stack: ["square", "google_business", "gmail"],
-    budget_usd_month: 60, pains: ["missed_calls"], needs: { spanish: true },
-    metrics: { calls_per_week: 50, missed_share: 0.3, avg_ticket: 85, reviews_per_month: 6, reply_share: 0.5, email_hours_per_week: 2 } } },
+// Demo stories: composite personas built from the market study (docs/MARKET_STUDY.md). Numbers are typical, not a real business.
+const STORIES = {
+  maria: { who: "Maria", emoji: "🌮", role: "Family taqueria · College Park, MD", color: "#ff8a00",
+    quote: "I lose lunch-rush calls and never have time for Google reviews. Half my regulars speak Spanish. I can spend about $150 a month.",
+    data: { name: "Maria's Taqueria (demo story)", industry: "restaurant", stack: ["square", "google_business", "gmail", "quickbooks"],
+      budget_usd_month: 150, pains: ["missed_calls", "review_replies"], needs: { spanish: true },
+      metrics: { calls_per_week: 160, avg_ticket: 24, reviews_per_month: 20, reply_share: 0.15, monthly_revenue: 48000,
+                 invoices_per_month: 8, avg_invoice: 380, late_share: 0.4, email_hours_per_week: 3, owner_hourly_value: 30 } } },
+  dev: { who: "Dev", emoji: "🛠️", role: "Two-truck HVAC company · Silver Spring, MD", color: "#10b981",
+    quote: "Every missed call in July is a $350 job going to the next guy on Google. I'm on Jobber and QuickBooks and I'm not adding another login.",
+    data: { name: "Dev's Comfort Air HVAC (demo story)", industry: "hvac", stack: ["jobber", "quickbooks", "google_business", "google_workspace", "gmail"],
+      budget_usd_month: 300, pains: ["missed_calls", "invoice_chasing"], needs: { human_handoff: true },
+      metrics: { calls_per_week: 60, avg_ticket: 350, reviews_per_month: 8, invoices_per_month: 70, avg_invoice: 620, late_share: 0.35,
+                 email_hours_per_week: 6, owner_hourly_value: 45, uses_builtin_reminders: false } } },
+  keisha: { who: "Keisha", emoji: "💇🏾‍♀️", role: "Two-chair salon · Hyattsville, MD", color: "#8b5cf6",
+    quote: "I can't pick up the phone when I'm mid-color. I've got $60 a month, tops. Tell me straight if something isn't worth it.",
+    data: { name: "Keisha's Studio (demo story)", industry: "salon", stack: ["square", "google_business", "gmail"],
+      budget_usd_month: 60, pains: ["missed_calls", "review_replies"], needs: {},
+      metrics: { calls_per_week: 50, missed_share: 0.3, avg_ticket: 85, reviews_per_month: 6, reply_share: 0.5, email_hours_per_week: 2 } } },
 };
+function startStory(key) {
+  store.set("sf.story", key); S.biz = null; S.rec = null; S.picks = [];
+  draft = structuredClone(STORIES[key].data); submitIntake();
+}
+function storyCards(dark = false) {
+  return html`<div class="grid gap-2.5 sm:grid-cols-3">${Object.entries(STORIES).map(([k, st]) => html`
+    <button type="button" class="text-left rounded-2xl p-3.5 flex flex-col gap-1.5 transition-transform active:scale-[.98] ${dark ? "bg-white/10 hover:bg-white/15" : "bg-white border border-soft2 hover:border-line"}" data-example="${k}">
+      <div class="flex items-center gap-2.5"><span class="w-10 h-10 rounded-full flex items-center justify-center text-[20px]" style="background:${st.color}33">${st.emoji}</span>
+        <div class="min-w-0"><div class="font-head font-bold text-[15px]">${st.who}</div><div class="text-[11.5px] ${dark ? "text-white/70" : "text-muted"} truncate">${st.role}</div></div></div>
+      <p class="text-[12.5px] leading-snug ${dark ? "text-white/85" : "text-ink/80"}">“${st.quote}”</p>
+      <span class="text-[12px] font-semibold ${dark ? "text-[#ffb77f]" : "text-accent"}">${icon("swipe", "text-[16px] align-[-4px]")} Swipe as ${st.who} →</span>
+    </button>`)}</div>`;
+}
+const currentStory = () => { const k = store.get("sf.story"); return S.biz && k && STORIES[k] && S.biz.name === STORIES[k].data.name ? STORIES[k] : null; };
 
 // ---------- state ----------
 const S = { biz: null, rec: null, catalog: [], research: null, picks: [], compare: new Set(), browseJob: "all", q: "" };
@@ -119,11 +140,10 @@ function renderStart() {
         <div class="card p-5 bg-navy text-white border-0 mb-4">
           <p class="badge bg-white/15 text-white">For small business owners</p>
           <h1 id="start-title" class="font-head text-[26px] leading-tight font-bold mt-2">Which AI tools are worth it for <em>your</em> business?</h1>
-          <p class="text-[14px] text-white/80 mt-2">Tell us about your shop in 2 minutes. We compare ${S.research?.stats.tools || "real"} real tools on <b>your</b> numbers, your budget and the software you already pay for, with real prices and real reviews (good and bad).</p>
-          <div class="mt-4 flex flex-wrap gap-2">
-            ${Object.entries(EXAMPLES).map(([k, e]) => html`<button class="btn btn-ghost !min-h-[38px] !py-2 !text-[12.5px]" data-example="${k}">${icon("bolt", "text-[16px]")} ${e.label}</button>`)}
-          </div>
-          <p class="text-[11px] text-white/60 mt-2">Examples fill in typical numbers so you can see how it works. Replace them with yours.</p>
+          <p class="text-[14px] text-white/80 mt-2">Tell us about your shop in 2 minutes. We compare ${S.research?.stats.tools || ""} researched AI tools on <b>your</b> numbers, your budget and the software you already pay for, with real prices and real reviews (good and bad).</p>
+          <p class="font-head font-bold text-[15px] mt-5 mb-2">Try it as a real-world owner</p>
+          ${storyCards(true)}
+          <p class="text-[11px] text-white/60 mt-2">Demo stories are composites built from our market study (typical numbers, not real businesses). Or fill in your own below.</p>
         </div>`}
       ${editing ? html`<h1 id="start-title" class="font-head text-[22px] font-bold mb-3">Your business profile</h1>` : ""}
       <form id="intake" class="flex flex-col gap-5" novalidate>
@@ -175,10 +195,10 @@ function renderStart() {
   $$("[data-sw]").forEach((b) => (b.onclick = () => { d.stack = toggle(d.stack, b.dataset.sw); b.setAttribute("aria-pressed", d.stack.includes(b.dataset.sw)); }));
   $$("[data-pain]").forEach((b) => (b.onclick = () => { sync(); d.pains = toggle(d.pains, b.dataset.pain); renderStart(); }));
   $$("[data-need]").forEach((b) => (b.onclick = () => { d.needs[b.dataset.need] = !d.needs[b.dataset.need]; b.setAttribute("aria-pressed", !!d.needs[b.dataset.need]); }));
-  $$("[data-example]").forEach((b) => (b.onclick = () => { draft = structuredClone(EXAMPLES[b.dataset.example].data); submitIntake(); }));
+  $$("[data-example]").forEach((b) => (b.onclick = () => startStory(b.dataset.example)));
   if (editing) wireImport();
   $("#f-reset") && ($("#f-reset").onclick = () => { store.set("sf.biz", null); S.biz = null; S.rec = null; draft = null; location.hash = "#start"; render(); });
-  $("#intake").onsubmit = (e) => { e.preventDefault(); sync(); submitIntake(); };
+  $("#intake").onsubmit = (e) => { e.preventDefault(); sync(); if (!editing) store.set("sf.story", null); submitIntake(); };
 }
 
 async function submitIntake() {
@@ -406,23 +426,23 @@ function swipeCardHTML({ job: j, o }, pos) {
   return html`
     ${stamp("right", o.kind === "builtin" ? "SET UP" : "TRY IT", "stamp-hire", "top-[44%] left-6 rotate-[-14deg]")}
     ${stamp("left", "PASS", "stamp-pass", "top-[44%] right-6 rotate-[14deg]")}
-    <div class="relative px-5 pt-5 pb-4 text-white shrink-0" style="background:linear-gradient(135deg, #0e1c2f 0%, #0e1c2f 55%, ${J.color} 160%)">
+    <div class="relative px-5 pt-4 pb-3.5 text-white shrink-0" style="background:linear-gradient(135deg, #0e1c2f 0%, #0e1c2f 55%, ${J.color} 160%)">
       <div class="flex items-center justify-between gap-2">
         <span class="inline-flex items-center gap-1.5 text-[12px] font-semibold bg-white/12 rounded-full pl-1.5 pr-3 py-1" style="background:rgba(255,255,255,.12)">
           <span class="w-6 h-6 rounded-full flex items-center justify-center" style="background:${J.color}">${icon(J.icon, "text-[15px] text-white")}</span>${j.label}</span>
         ${j.is_pain ? html`<span class="badge" style="background:rgba(255,255,255,.15)">You asked</span>` : ""}
       </div>
-      <div class="flex items-end justify-between gap-3 mt-4">
+      <div class="flex items-end justify-between gap-3 mt-3">
         <div class="min-w-0">
           ${o.kind === "builtin" ? html`<span class="badge bg-emerald-400 text-emerald-950">Free · you already have it</span>` : ""}
-          <h2 class="font-head font-bold text-[26px] leading-[1.05] mt-1">${o.name}</h2>
+          <h2 class="font-head font-bold text-[23px] leading-[1.05] mt-1">${o.name}</h2>
           <p class="text-[12px] text-white/70 mt-1 truncate">${o.vendor} · ${o.plan}</p>
         </div>
         <div class="shrink-0 text-center"><div class="w-16 h-16 rounded-2xl bg-white text-ink flex flex-col items-center justify-center shadow-lg">
           <span class="font-head text-[24px] font-bold leading-none">${o.score}</span><span class="text-[9px] uppercase tracking-wider text-muted mt-0.5">fit score</span></div></div>
       </div>
     </div>
-    <div class="px-5 py-4 flex flex-col gap-3 flex-1 min-h-0">
+    <div class="px-5 py-3.5 flex flex-col gap-2.5 flex-1 min-h-0">
       <div class="flex items-stretch gap-2">
         <div class="flex-1 rounded-2xl bg-emerald-50 border border-emerald-100 p-3">
           <div class="text-[10.5px] uppercase tracking-wider font-bold text-emerald-800">Worth to you</div>
@@ -433,9 +453,9 @@ function swipeCardHTML({ job: j, o }, pos) {
           <div class="font-head text-[22px] font-bold leading-tight">${o.monthly_cost === 0 ? "Free" : usd2(o.monthly_cost)}</div>
           <div class="text-[11px] text-muted">${roi ? `${roi.toFixed(1)}× return` : "per month"}</div></div>
       </div>
-      <p class="text-[13px] leading-snug text-ink/90">${j.facts.join(" ")}</p>
+      <p class="text-[12.5px] leading-snug text-ink/90 line-clamp-3">${j.facts.join(" ")}</p>
       <div class="flex flex-wrap gap-1.5">
-        ${o.trial ? html`<span class="badge bg-soft2 text-ink !normal-case !tracking-normal !text-[11.5px]">${icon("schedule", "text-[14px]")} ${o.trial}</span>` : ""}
+        ${o.trial && !/not stated|not verified/i.test(o.trial) ? html`<span class="badge bg-soft2 text-ink !normal-case !tracking-normal !text-[11.5px]">${icon("schedule", "text-[14px]")} ${o.trial}</span>` : ""}
         <span class="badge bg-soft2 text-ink !normal-case !tracking-normal !text-[11.5px]">${icon("star", "text-[14px]")} ${rating ? `${rating.score}★ · ${rating.count.toLocaleString()} on ${rating.platform}` : "No independent ratings yet"}</span>
         ${o.unconfirmed_needs?.length ? html`<span class="badge bg-amber-100 text-amber-900 !normal-case !tracking-normal !text-[11.5px]">${icon("help", "text-[14px]")} ${o.unconfirmed_needs.join(", ")} unconfirmed</span>` : ""}
       </div>
@@ -447,7 +467,6 @@ function swipeCardHTML({ job: j, o }, pos) {
         ${good && !bad ? html`<blockquote class="text-[12px] bg-emerald-50 rounded-xl px-3 py-2 line-clamp-2">👍 “${good.quote}” <span class="text-muted">· ${good.author}</span></blockquote>` : ""}
         ${bad ? html`<blockquote class="text-[12px] bg-red-50 rounded-xl px-3 py-2 line-clamp-2">👎 “${bad.quote}” <span class="text-muted">· ${bad.author}</span></blockquote>` : ""}
         ${!good && !bad ? html`<div class="text-[12px] bg-amber-50 rounded-xl px-3 py-2">${o.kind === "builtin" ? "A free feature of software you already pay for: nothing new to buy or learn." : "No independent reviews found yet. We'd rather say so than invent a rating. Try it free first."}</div>` : ""}
-        <div class="text-[11px] text-muted text-center pt-1">Tap for prices, sources & all reviews</div>
       </div>
     </div>`;
 }
@@ -462,8 +481,10 @@ function renderSwipe() {
           html`<span class="h-2 rounded-full transition-all ${cards.some((c) => c.job.job === j.job) ? (cards[0].job.job === j.job ? "w-6" : "w-2") : "w-2 opacity-30"}" style="background:${job(j.job).color}"></span>`)}
           <span class="text-[12px] text-muted ml-1">${cards.length ? `${cards.length} left` : "Done"}</span></div></div>
       <p class="text-[12px] text-muted">Right = try it · Left = pass · Tap = details · <a href="#foryou" class="underline">full breakdown</a></p>
-      <div id="card-stack" class="relative w-full mt-3" style="height:min(620px, calc(100dvh - 255px)); min-height:500px"></div>
-      <div id="swipe-controls" class="flex items-center justify-center gap-4 mt-4 ${cards.length ? "" : "invisible"}">
+      ${currentStory() ? html`<details class="mt-2 rounded-2xl px-3 py-1.5 text-[12.5px]" style="background:${currentStory().color}18"><summary class="flex items-center gap-2"><span class="text-[18px]">${currentStory().emoji}</span><span class="truncate"><b>You're ${currentStory().who}</b> · ${currentStory().role}</span>${icon("expand_more", "chev text-[16px] ml-auto")}</summary>
+        <p class="text-muted pb-1.5">“${currentStory().quote}”</p></details>` : ""}
+      <div id="card-stack" class="relative w-full mt-3" style="height:min(600px, calc(100dvh - 335px)); min-height:440px"></div>
+      <div id="swipe-controls" class="flex items-center justify-center gap-4 mt-3 ${cards.length ? "" : "invisible"}">
         <button class="w-14 h-14 rounded-full bg-white border-2 border-red-200 shadow-lg text-red-500 flex items-center justify-center active:scale-90 transition-transform" data-dir="left" aria-label="Pass">${icon("close", "text-[28px]")}</button>
         <button class="w-12 h-12 rounded-full bg-white border border-line shadow text-ink flex items-center justify-center active:scale-90 transition-transform" data-dir="up" aria-label="See details">${icon("info", "text-[22px]")}</button>
         <button class="w-14 h-14 rounded-full bg-white border-2 border-emerald-200 shadow-lg text-emerald-600 flex items-center justify-center active:scale-90 transition-transform" data-dir="right" aria-label="Start a trial">${icon("favorite", "text-[28px]")}</button>
@@ -471,10 +492,25 @@ function renderSwipe() {
     </section>`);
   const stack = $("#card-stack");
   if (!cards.length) {
-    stack.innerHTML = html`<div class="absolute inset-0 card flex flex-col items-center justify-center text-center p-6 border-dashed">
-      ${icon("done_all", "text-[40px] text-accent")}<h2 class="font-head font-bold text-[20px] mt-2">You've decided on every job</h2>
-      <p class="text-[13px] text-muted mt-1 max-w-[280px]">Your trials and setup checklists are in My tools. Jobs where nothing pays off yet are explained on For you.</p>
-      <div class="flex gap-2 mt-4"><a href="#mytools" class="btn btn-primary">My tools</a><a href="#foryou" class="btn btn-ghost">For you</a></div></div>`.s;
+    const decided = S.picks.filter((r) => ["trial", "adopted", "passed"].includes(r.pick.status));
+    const need = S.rec.jobs.filter((x) => x.status === "needs_info");
+    stack.style.height = "auto";
+    stack.innerHTML = (decided.length ? html`
+      <div class="card p-5 flex flex-col gap-3">
+        <div class="text-center">${icon("done_all", "text-[40px] text-accent")}<h2 class="font-head font-bold text-[20px] mt-1">Deck done</h2>
+          <p class="text-[13px] text-muted">You decided on ${decided.length} tool${decided.length === 1 ? "" : "s"}. Trials and checklists are in My tools.</p></div>
+        <ul class="text-[13px] flex flex-col gap-1">${decided.map((r) => html`<li class="flex justify-between gap-2 bg-soft rounded-xl px-3 py-2"><span>${r.tool?.name}</span><span class="badge ${r.pick.status === "passed" ? "bg-slate-200 text-slate-700" : "bg-emerald-100 text-emerald-800"}">${r.pick.status === "passed" ? "Passed" : "Trying"}</span></li>`)}</ul>
+        <div class="flex gap-2"><a href="#mytools" class="btn btn-primary flex-1">My tools</a><a href="#foryou" class="btn btn-ghost flex-1">Full breakdown</a></div>
+        <p class="font-head font-bold text-[14px] mt-2">Swipe another owner's story</p>${storyCards()}
+      </div>` : html`
+      <div class="card p-5 flex flex-col gap-3">
+        <div class="text-center">${icon("edit_note", "text-[40px] text-accent")}<h2 class="font-head font-bold text-[20px] mt-1">Nothing to swipe yet</h2>
+          <p class="text-[13px] text-muted">${need.length ? "We don't guess. Add a few numbers and your cards appear:" : "Nothing pays for itself at your numbers right now. See why on the full breakdown."}</p></div>
+        ${need.length ? html`<ul class="text-[13px] flex flex-col gap-1">${need.flatMap((x) => x.missing).map((m) => html`<li class="bg-amber-50 rounded-xl px-3 py-2">${m.label}</li>`)}</ul>
+          <a href="#profile" class="btn btn-primary">${icon("edit", "text-[18px]")} Add my numbers</a>` : html`<a href="#foryou" class="btn btn-primary">See why</a>`}
+        <p class="font-head font-bold text-[14px] mt-2">Or swipe as a demo owner</p>${storyCards()}
+      </div>`).s;
+    $$("[data-example]", stack).forEach((b) => (b.onclick = () => startStory(b.dataset.example)));
     return;
   }
   const visible = cards.slice(0, 3);
