@@ -493,7 +493,6 @@ function renderSwipe() {
         <div class="flex items-center gap-1.5" aria-label="${cards.length} left">${S.rec.jobs.filter((j) => ["recommend", "use_builtin"].includes(j.status)).map((j) =>
           html`<span class="h-2 rounded-full transition-all ${cards.some((c) => c.job.job === j.job) ? (cards[0].job.job === j.job ? "w-6" : "w-2") : "w-2 opacity-30"}" style="background:${job(j.job).color}"></span>`)}
           <span class="text-[12px] text-muted ml-1">${cards.length ? `${cards.length} left` : "Done"}</span></div></div>
-      <p class="text-[12px] text-muted">Right = try it · Left = pass · Tap = details · <a href="#foryou" class="underline">full breakdown</a></p>
       ${currentStory() ? html`<details class="mt-2 rounded-2xl px-3 py-1.5 text-[12.5px]" style="background:${currentStory().color}18"><summary class="flex items-center gap-2"><span class="text-[18px]">${currentStory().emoji}</span><span class="truncate"><b>You're ${currentStory().who}</b> · ${currentStory().role}</span>${icon("expand_more", "chev text-[16px] ml-auto")}</summary>
         <p class="text-muted pb-1.5">“${currentStory().quote}”</p></details>` : ""}
       <div id="card-stack" class="relative w-full mt-3" style="height:min(600px, calc(100dvh - 335px)); min-height:440px"></div>

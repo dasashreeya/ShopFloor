@@ -1,5 +1,5 @@
 // Network-first for the API, cache-first for the app shell, so the PWA opens offline with the last data it saw.
-const SHELL = "sf-shell-v2";
+const SHELL = "sf-shell-v3";
 const ASSETS = ["/", "/static/app.js", "/static/styles.css", "/assets/logo-mark.png", "/manifest.webmanifest"];
 self.addEventListener("install", (e) => e.waitUntil(caches.open(SHELL).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting())));
 self.addEventListener("activate", (e) => e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k !== SHELL).map((k) => caches.delete(k)))).then(() => self.clients.claim())));
